@@ -121,6 +121,16 @@ struct ContentView: View {
             .padding(.trailing, 6)
             .padding(.top, 6)
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    focusedInput = false
+                    hideKeyboard()
+                }
+                .font(.custom("American Typewriter", size: 14))
+            }
+        }
     }
 }
 
