@@ -13,10 +13,13 @@ struct ConversionsListView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("All rates")
-                .font(.custom("American Typewriter", size: 14))
-                .fontWeight(.semibold)
-                .foregroundColor(.white.opacity(0.85))
+            HStack{
+                Text("All rates")
+                    .font(.custom("American Typewriter", size: 14))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white.opacity(0.85))
+                Spacer()
+            }
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 10) {
