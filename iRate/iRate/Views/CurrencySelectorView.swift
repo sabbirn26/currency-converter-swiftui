@@ -2,7 +2,7 @@
 //  CurrencySelectorView.swift
 //  iRate
 //
-//  Created by Codex on 2/8/26.
+//  Created by Sabbir Nasir on 2/8/26.
 //
 
 import SwiftUI
