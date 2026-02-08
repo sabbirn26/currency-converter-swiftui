@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var searchCr = ""
     @State private var activeSheet: PickerTarget?
     @State private var showContent = false
+    @State private var showSettings = false
 
     enum PickerTarget: Identifiable {
         case base
@@ -85,6 +86,9 @@ struct ContentView: View {
             )
             .presentationDetents([.medium, .large])
         }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+        }
         .onAppear {
             viewModel.validation()
             showContent = true
@@ -92,6 +96,15 @@ struct ContentView: View {
         .toast(showToast: $viewModel.errorAlert, position: .middle) {
             Text(viewModel.errorMessage)
                 .font(.custom("American Typewriter", size: 14))
+        }
+        .overlay(alignment: .topTrailing) {
+            Button(action: {
+                showSettings = true
+            }) {
+                CircleButtonView(iconName: "gearshape")
+            }
+            .padding(.trailing, 6)
+            .padding(.top, 6)
         }
     }
 }
