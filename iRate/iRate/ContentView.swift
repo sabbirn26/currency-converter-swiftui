@@ -74,19 +74,27 @@ struct ContentView: View {
     }
     
     //function to make api request
+    func parsedAmount() -> Double? {
+        let trimmed = baseAmount.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty || trimmed == "." { return nil }
+        return Double(trimmed)
+    }
+
     func validation() {
-        if Double(baseAmount) ?? 0.0 <= 0{
-          errorAlert = true
-            handleError = .inputError
-        }else if baseAmount.hasPrefix("."){
-            baseAmount = "0"+"\(baseAmount)"
-            makeRequest()
-        }else{
-            makeRequest()
+        if baseAmount.hasPrefix(".") {
+            baseAmount = "0" + baseAmount
         }
+
+        guard let amount = parsedAmount(), amount > 0 else {
+            errorAlert = true
+            handleError = .inputError
+            return
+        }
+
+        makeRequest(amount: amount)
     }
     
-    func makeRequest (){
+    func makeRequest(amount: Double){
         isPayloadCall = true
         onlyCrCodes.removeAll()
         currencies.removeAll()
@@ -94,26 +102,36 @@ struct ContentView: View {
         currencyList.removeAll()
         currencies.append(desCrCode)
         
-        apiRequest(url: "https://v6.exchangerate-api.com/v6/80a68197fb86c8427589c1a4/latest/\(baseCr)/\(desCrCode)"){ currencyData in
-        
-            if let currency = currencyData{
-                for currency in  currency.rates {
-                    onlyCrCodes.append(currency.key)
-                    fullList.append("\(currency.key) \(String (format: "%.2f", currency.value))")
-                    
-                    if currencies.contains(currency.key){
-                        result = "\(currency.key) \(String (format: "%.2f", currency.value))"
-                    }
-                    
-                    onlyCrCodes.sort()
-                    fullList.sort()
-                    
-                }
+        apiRequest(url: "https://v6.exchangerate-api.com/v6/80a68197fb86c8427589c1a4/latest/\(baseCr)"){ currencyData in
+            guard let currency = currencyData, let rates = currency.conversionRates else {
                 isPayloadCall = false
-                errorAlert = !currency.success
+                errorAlert = true
                 handleError = .apiError
-                
+                return
             }
+
+            if !currency.success {
+                isPayloadCall = false
+                errorAlert = true
+                handleError = .apiError
+                return
+            }
+
+            for rate in rates {
+                onlyCrCodes.append(rate.key)
+                let convertedValue = rate.value * amount
+                fullList.append("\(rate.key) \(String(format: "%.2f", convertedValue))")
+
+                if currencies.contains(rate.key) {
+                    result = "\(rate.key) \(String(format: "%.2f", convertedValue))"
+                }
+            }
+
+            onlyCrCodes.sort()
+            fullList.sort()
+
+            isPayloadCall = false
+            errorAlert = false
         }
     }
 
@@ -309,6 +327,5 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
 
 
