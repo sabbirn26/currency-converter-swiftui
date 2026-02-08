@@ -42,5 +42,6 @@ struct ConversionsListView: View {
                 await onRefresh()
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }

@@ -34,16 +34,19 @@ struct ContentView: View {
                     destinationCode: viewModel.desCrCode,
                     onBaseTap: {
                         focusedInput = false
+                        Haptics.selection()
                         activeSheet = .base
                     },
                     onDestinationTap: {
                         focusedInput = false
+                        Haptics.selection()
                         activeSheet = .destination
                     },
                     onSwap: {
                         let oldBase = viewModel.baseCr
                         viewModel.baseCr = viewModel.desCrCode
                         viewModel.desCrCode = oldBase
+                        Haptics.lightImpact()
                         viewModel.validation()
                     }
                 )
@@ -55,8 +58,11 @@ struct ContentView: View {
                 ResultCardView(resultText: viewModel.result)
 
                 ConversionsListView(items: viewModel.fullList, onRefresh: {
+                    Haptics.lightImpact()
                     await viewModel.refresh()
                 })
+
+                Spacer(minLength: 0)
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
@@ -66,8 +72,13 @@ struct ContentView: View {
 
             LoadingOverlayView(isLoading: $viewModel.isPayloadCall)
         }
+        .onTapGesture {
+            hideKeyboard()
+        }
+        .scrollDismissesKeyboard(.immediately)
         .sheet(item: $activeSheet, onDismiss: {
             searchCr = ""
+            hideKeyboard()
         }) { target in
             CurrencyPickerSheet(
                 title: target == .base ? "Your currency" : "To currency",
@@ -81,6 +92,8 @@ struct ContentView: View {
                     }
                     searchCr = ""
                     activeSheet = nil
+                    hideKeyboard()
+                    Haptics.selection()
                     viewModel.validation()
                 }
             )
@@ -99,6 +112,8 @@ struct ContentView: View {
         }
         .overlay(alignment: .topTrailing) {
             Button(action: {
+                hideKeyboard()
+                Haptics.lightImpact()
                 showSettings = true
             }) {
                 CircleButtonView(iconName: "gearshape")
