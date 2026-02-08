@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage("appLanguage") private var appLanguage = "en"
 
     let defaultURL = URL(string: "https://google.com/")!
     let githubURL = URL(string: "https://youtube.com/")!
@@ -23,6 +24,7 @@ struct SettingsView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 18) {
                         headerCard
+                        languageCard
                         developerCard
                         linksCard
                     }
@@ -31,7 +33,7 @@ struct SettingsView: View {
                     .padding(.bottom, 24)
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(L10n.t("Settings", language: appLanguage))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -52,12 +54,12 @@ extension SettingsView {
         VStack(alignment: .leading, spacing: 12) {
             iRateLogoView()
 
-            Text("About iRate")
+            Text(L10n.t("About iRate", language: appLanguage))
                 .font(.custom("American Typewriter", size: 18))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
 
-            Text("iRate is a sleek currency converter built with SwiftUI. It fetches live exchange rates, lets you swap currencies instantly, and surfaces results in a clean, modern interface. The app is designed to be fast and simple: pick your currencies, enter an amount, and see conversions at a glance.")
+            Text(L10n.t("iRate is a sleek currency converter built with SwiftUI. It fetches live exchange rates, lets you swap currencies instantly, and surfaces results in a clean, modern interface. The app is designed to be fast and simple: pick your currencies, enter an amount, and see conversions at a glance.", language: appLanguage))
                 .font(.custom("American Typewriter", size: 14))
                 .foregroundColor(.white.opacity(0.8))
         }
@@ -69,9 +71,32 @@ extension SettingsView {
         )
     }
 
+    private var languageCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(L10n.t("Language", language: appLanguage))
+                .font(.custom("American Typewriter", size: 18))
+                .fontWeight(.semibold)
+                .foregroundColor(.white)
+
+            Toggle(isOn: isBanglaBinding) {
+                Text(L10n.t("Bangla", language: appLanguage))
+                    .font(.custom("American Typewriter", size: 14))
+                    .foregroundColor(.white)
+            }
+            .tint(.white)
+            .padding(.vertical, 6)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.white.opacity(0.10))
+        )
+    }
+
     private var developerCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Developer")
+            Text(L10n.t("Developer", language: appLanguage))
                 .font(.custom("American Typewriter", size: 18))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
@@ -86,16 +111,16 @@ extension SettingsView {
                         .stroke(Color.white.opacity(0.2), lineWidth: 1)
                 )
 
-            Text("I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI.")
+            Text(L10n.t("I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI.", language: appLanguage))
                 .font(.custom("American Typewriter", size: 14))
                 .foregroundColor(.white.opacity(0.8))
 
             VStack(alignment: .leading, spacing: 8) {
                 Link(destination: personalURL) {
-                    SettingsLinkRow(title: "GitHub Profile")
+                    SettingsLinkRow(title: L10n.t("GitHub Profile", language: appLanguage))
                 }
                 Link(destination: linkedinURL) {
-                    SettingsLinkRow(title: "LinkedIn Profile")
+                    SettingsLinkRow(title: L10n.t("LinkedIn Profile", language: appLanguage))
                 }
             }
         }
@@ -109,23 +134,23 @@ extension SettingsView {
 
     private var linksCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Application")
+            Text(L10n.t("Application", language: appLanguage))
                 .font(.custom("American Typewriter", size: 18))
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
 
             VStack(alignment: .leading, spacing: 8) {
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: "Terms of Service")
+                    SettingsLinkRow(title: L10n.t("Terms of Service", language: appLanguage))
                 }
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: "Privacy Policy")
+                    SettingsLinkRow(title: L10n.t("Privacy Policy", language: appLanguage))
                 }
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: "Company Website")
+                    SettingsLinkRow(title: L10n.t("Company Website", language: appLanguage))
                 }
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: "Learn More")
+                    SettingsLinkRow(title: L10n.t("Learn More", language: appLanguage))
                 }
             }
         }
@@ -134,6 +159,13 @@ extension SettingsView {
         .background(
             RoundedRectangle(cornerRadius: 18)
                 .fill(Color.white.opacity(0.10))
+        )
+    }
+
+    private var isBanglaBinding: Binding<Bool> {
+        Binding(
+            get: { appLanguage == "bn" },
+            set: { appLanguage = $0 ? "bn" : "en" }
         )
     }
 

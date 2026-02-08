@@ -10,10 +10,11 @@ import SwiftUI
 struct ResultCardView: View {
     let resultText: String
     @State private var bump = false
+    @AppStorage("appLanguage") private var appLanguage = "en"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Converted")
+            Text(L10n.t("Converted", language: appLanguage))
                 .font(.custom("American Typewriter", size: 12))
                 .foregroundColor(.white.opacity(0.65))
 

@@ -12,11 +12,12 @@ struct CurrencyCardView: View {
     let code: String
     let accent: Color
     let onTap: () -> Void
+    @AppStorage("appLanguage") private var appLanguage = "en"
 
     var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 8) {
-                Text(title)
+                Text(L10n.t(title, language: appLanguage))
                     .font(.custom("American Typewriter", size: 12))
                     .foregroundColor(.white.opacity(0.65))
 

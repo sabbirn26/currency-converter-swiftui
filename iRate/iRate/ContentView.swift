@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var activeSheet: PickerTarget?
     @State private var showContent = false
     @State private var showSettings = false
+    @AppStorage("appLanguage") private var appLanguage = "en"
 
     enum PickerTarget: Identifiable {
         case base
@@ -107,7 +108,7 @@ struct ContentView: View {
             showContent = true
         }
         .toast(showToast: $viewModel.errorAlert, position: .middle) {
-            Text(viewModel.errorMessage)
+            Text(L10n.t(viewModel.errorMessageKey, language: appLanguage))
                 .font(.custom("American Typewriter", size: 14))
         }
         .overlay(alignment: .topTrailing) {
@@ -124,7 +125,7 @@ struct ContentView: View {
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") {
+                Button(L10n.t("Done", language: appLanguage)) {
                     focusedInput = false
                     hideKeyboard()
                 }

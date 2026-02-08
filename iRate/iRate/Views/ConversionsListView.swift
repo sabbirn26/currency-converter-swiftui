@@ -10,14 +10,15 @@ import SwiftUI
 struct ConversionsListView: View {
     let items: [String]
     let onRefresh: () async -> Void
+    @AppStorage("appLanguage") private var appLanguage = "en"
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack{
-                Text("All rates")
-                    .font(.custom("American Typewriter", size: 14))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white.opacity(0.85))
+            Text(L10n.t("All rates", language: appLanguage))
+                .font(.custom("American Typewriter", size: 14))
+                .fontWeight(.semibold)
+                .foregroundColor(.white.opacity(0.85))
                 Spacer()
             }
 

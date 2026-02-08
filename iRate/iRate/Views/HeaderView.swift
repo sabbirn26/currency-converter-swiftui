@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HeaderView: View {
+    @AppStorage("appLanguage") private var appLanguage = "en"
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("iRate")
@@ -15,7 +17,7 @@ struct HeaderView: View {
                 .fontWeight(.bold)
                 .foregroundColor(.white)
 
-            Text("Currency conversion in a glance")
+            Text(L10n.t("Currency conversion in a glance", language: appLanguage))
                 .font(.custom("American Typewriter", size: 14))
                 .foregroundColor(.white.opacity(0.75))
         }

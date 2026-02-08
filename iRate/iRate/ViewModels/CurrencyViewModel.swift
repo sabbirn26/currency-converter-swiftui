@@ -21,16 +21,16 @@ final class CurrencyViewModel: ObservableObject {
     @Published var errorAlert = false
     @Published var handleError: ErrorType?
 
-    private let apiErrorText = "API error occurred"
-    private let validationErrorText = "Please enter a valid amount"
+    private let apiErrorKey = "API error occurred"
+    private let validationErrorKey = "Please enter a valid amount"
 
     enum ErrorType {
         case apiError
         case inputError
     }
 
-    var errorMessage: String {
-        handleError == .apiError ? apiErrorText : validationErrorText
+    var errorMessageKey: String {
+        handleError == .apiError ? apiErrorKey : validationErrorKey
     }
 
     func validation() {

@@ -12,6 +12,7 @@ struct CurrencyPickerSheet: View {
     @Binding var searchText: String
     let codes: [String]
     let onSelect: (String) -> Void
+    @AppStorage("appLanguage") private var appLanguage = "en"
 
     var body: some View {
         ZStack {
@@ -26,7 +27,7 @@ struct CurrencyPickerSheet: View {
             .ignoresSafeArea()
 
             VStack(spacing: 14) {
-                Text(title)
+                Text(L10n.t(title, language: appLanguage))
                     .font(.custom("American Typewriter", size: 18))
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
@@ -35,7 +36,7 @@ struct CurrencyPickerSheet: View {
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass")
                         .foregroundColor(.white.opacity(0.7))
-                    TextField("Search currency", text: $searchText)
+                    TextField(L10n.t("Search currency", language: appLanguage), text: $searchText)
                         .textInputAutocapitalization(.characters)
                         .foregroundColor(.white)
                 }
