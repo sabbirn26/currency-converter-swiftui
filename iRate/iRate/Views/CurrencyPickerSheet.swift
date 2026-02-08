@@ -26,15 +26,11 @@ struct CurrencyPickerSheet: View {
             .ignoresSafeArea()
 
             VStack(spacing: 14) {
-                Capsule()
-                    .fill(Color.white.opacity(0.35))
-                    .frame(width: 48, height: 5)
-                    .padding(.top, 8)
-
                 Text(title)
                     .font(.custom("Avenir Next", size: 18))
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
+                    .padding(.top, 12)
 
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass")

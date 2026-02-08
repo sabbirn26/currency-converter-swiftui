@@ -49,7 +49,7 @@ struct ContentView: View {
                 ConversionsListView(items: viewModel.fullList)
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 24)
+            .padding(.top, 24)
 
             LoadingOverlayView(isLoading: $viewModel.isPayloadCall)
         }

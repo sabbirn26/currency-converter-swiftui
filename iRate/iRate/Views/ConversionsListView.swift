@@ -36,6 +36,5 @@ struct ConversionsListView: View {
                 }
             }
         }
-        .padding(.bottom, 20)
     }
 }
