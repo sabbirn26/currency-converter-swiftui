@@ -6,81 +6,60 @@
 //
 
 import SwiftUI
-struct SelectionRow: View {
-    typealias Action = (String) -> Void
-    
-    let title: String
-    @Binding var selectedItem : String?
-    @Binding var showSheet : Bool
-    
-    var action : Action?
-    var body: some View {
-        HStack{
-            Text(title)
-            .font(.subheadline)
-            Spacer()
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            showSheet = false
-            if title == selectedItem{
-                selectedItem = nil
-            }else {
-                selectedItem = title
-            }
-            
-            //action
-            if let action = action {
-                action(title)
-            }
-        }
-    }
-}
-
 
 struct ContentView: View {
-    @State var baseAmount = "1.0"
-    @State var baseCr = "BDT"
-    @State var currencyList = [String]()
+    @State private var baseAmount = "1.0"
+    @State private var baseCr = "BDT"
+    @State private var desCrCode = "USD"
+
+    @State private var onlyCrCodes = [String]()
+    @State private var fullList = [String]()
+    @State private var result = ""
+
+    @State private var isPayloadCall = false
+    @State private var errorAlert = false
+    @State private var handleError: ErrorType?
+
     @FocusState private var focusedInput: Bool
-    @State var onlyCrCodes = [String]()
-    @State var desCrCode = "USD"
-    
-    @State var currencies = [String]()
-    @State var fullList = [String]()
-    @State var result = ""
-    @State var isPayloadCall = false
-    @State var showSheet = false
-    @State var showSheet2 = false
-    @State var errorAlert = false
-    
-    var  someText = "Select Your Currency Code: "
-    var alterText = "Select To the Currency Code: "
-    var apiErrorText = "Api Error Occured"
-    var validationErrorText = "Please enter valid input"
-    
-    
-    @State var searchCr = ""
-    @State var selectedItem: String? = nil
-    
-    @State var currencyCode : currencyBase?
-    enum currencyBase {
-        case curentCurrency, conversionCurrency
+
+    @State private var searchCr = ""
+    @State private var activeSheet: PickerTarget?
+
+    private let apiErrorText = "API error occurred"
+    private let validationErrorText = "Please enter a valid amount"
+
+    enum PickerTarget: Identifiable {
+        case base
+        case destination
+
+        var id: Int { self == .base ? 0 : 1 }
     }
-    
-    @State var handleError: errorType?
-    enum errorType {
-        case apiError, inputError
+
+    enum ErrorType {
+        case apiError
+        case inputError
     }
-    
-    //function to make api request
-    func parsedAmount() -> Double? {
+
+    private var gradientBackground: some View {
+        LinearGradient(
+            gradient: Gradient(colors: [
+                Color(red: 0.08, green: 0.10, blue: 0.16),
+                Color(red: 0.10, green: 0.15, blue: 0.25),
+                Color(red: 0.13, green: 0.20, blue: 0.30)
+            ]),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+    }
+
+    private func parsedAmount() -> Double? {
         let trimmed = baseAmount.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty || trimmed == "." { return nil }
         return Double(trimmed)
     }
 
-    func validation() {
+    private func validation() {
         if baseAmount.hasPrefix(".") {
             baseAmount = "0" + baseAmount
         }
@@ -93,16 +72,13 @@ struct ContentView: View {
 
         makeRequest(amount: amount)
     }
-    
-    func makeRequest(amount: Double){
+
+    private func makeRequest(amount: Double) {
         isPayloadCall = true
         onlyCrCodes.removeAll()
-        currencies.removeAll()
-        fullList.removeAll() //front page code + value
-        currencyList.removeAll()
-        currencies.append(desCrCode)
-        
-        apiRequest(url: "https://v6.exchangerate-api.com/v6/80a68197fb86c8427589c1a4/latest/\(baseCr)"){ currencyData in
+        fullList.removeAll()
+
+        apiRequest(url: "https://v6.exchangerate-api.com/v6/80a68197fb86c8427589c1a4/latest/\(baseCr)") { currencyData in
             guard let currency = currencyData, let rates = currency.conversionRates else {
                 isPayloadCall = false
                 errorAlert = true
@@ -117,18 +93,22 @@ struct ContentView: View {
                 return
             }
 
-            for rate in rates {
-                onlyCrCodes.append(rate.key)
-                let convertedValue = rate.value * amount
-                fullList.append("\(rate.key) \(String(format: "%.2f", convertedValue))")
+            let codes = rates.keys.sorted()
+            onlyCrCodes = codes
 
-                if currencies.contains(rate.key) {
-                    result = "\(rate.key) \(String(format: "%.2f", convertedValue))"
-                }
+            if let rate = rates[desCrCode] {
+                let converted = rate * amount
+                result = "\(desCrCode) \(String(format: "%.2f", converted))"
+            } else {
+                result = ""
             }
 
-            onlyCrCodes.sort()
-            fullList.sort()
+            for code in codes {
+                if let rate = rates[code] {
+                    let convertedValue = rate * amount
+                    fullList.append("\(code) \(String(format: "%.2f", convertedValue))")
+                }
+            }
 
             isPayloadCall = false
             errorAlert = false
@@ -136,189 +116,282 @@ struct ContentView: View {
     }
 
     var body: some View {
-        ZStack{
-            
-            VStack{
-                HStack{
-                    Text("Currency Converter")
-                        .font(.largeTitle)
-                        .bold()
-                        .foregroundColor(.pink)
-                }
-                .padding(.bottom,40)
-                
-                HStack(spacing: 40){
-                    VStack{
-                        Text("Your currency: ")
-                            .padding(.top,10)
-                            .padding(.horizontal)
-                        
-                        HStack{
-                            Text(baseCr)
-                                .foregroundColor(.blue)
-                            Image(systemName: "arrowshape.turn.up.right")
-                                .foregroundColor(.blue)
-                        }
-                        .padding(.top,6)
-                        .padding(.bottom,10)
-                        
-                        .onChange(of: baseCr){ newValue in
-                           validation()
-                        }
+        ZStack {
+            gradientBackground
+
+            VStack(spacing: 20) {
+                header
+                currencySelector
+                amountCard
+                resultCard
+                conversionsList
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 24)
+
+            if isPayloadCall {
+                loadingOverlay
+            }
+        }
+        .sheet(item: $activeSheet) { target in
+            CurrencyPickerSheet(
+                title: target == .base ? "Your currency" : "To currency",
+                searchText: $searchCr,
+                codes: onlyCrCodes,
+                onSelect: { code in
+                    if target == .base {
+                        baseCr = code
+                    } else {
+                        desCrCode = code
                     }
-                    .background(Color("CellBackground"))
-                    .cornerRadius(10)
-                    .shadow(color: .gray, radius: 5, x: 2, y: 2)
-                    .onTapGesture {
-                        showSheet = true
-                        currencyCode = .curentCurrency
-                        focusedInput = false
-                        
-                    }
-                    VStack{
-                        Text("To the currency: ")
-                            .padding(.top,10)
-                            .padding(.horizontal)
-                        HStack{
-                            Text(desCrCode)
-                                .foregroundColor(.blue)
-                            Image(systemName: "arrowshape.turn.up.right")
-                                .foregroundColor(.blue)
-                        }
-                        .padding(.top,6)
-                        .padding(.bottom,10)
-                        
-                        .onChange(of: desCrCode){ newValue in
-                          validation()
-                            
-                        }
-                    }
-                    .background(Color("CellBackground"))
-                    .cornerRadius(10)
-                    .shadow(color: .gray, radius: 5, x: 2, y: 2)
-                    .onTapGesture {
-                        showSheet = true
-                        currencyCode = .conversionCurrency
-                        focusedInput = true
-                    }
-                }
-                .padding(.bottom,10)
-                
-                Section{
-                    TextField("Enter an amount: ", text: $baseAmount)
-                        .keyboardType(.decimalPad)
-                        .padding()
-                        .background(Color.gray.opacity(0.10))
-                        .cornerRadius(10)
-                        .padding(20)
-                        .onChange(of: baseAmount){ newValue in
-                          validation()
-                            
-                        }
-                        .focused($focusedInput)
-                }
-                VStack{
-                    Text("Converted Currency: ")
-                        .bold()
-                        .font(.title2)
-                    Text(result)
-                        .bold()
-                        .font(.title3)
-                        .foregroundColor(Color("ConvertColor"))
-                }
-                
-                List{
-                    ForEach(fullList, id: \.self){ currency in
-                        Text("Converted Currency: "+currency)
-                            .font(.subheadline)
-                    }
-                }
-                
-                .onAppear{
+                    searchCr = ""
+                    activeSheet = nil
                     validation()
                 }
+            )
+            .presentationDetents([.medium, .large])
+        }
+        .onAppear {
+            validation()
+        }
+        .toast(showToast: $errorAlert, position: .middle) {
+            Text(handleError == .apiError ? apiErrorText : validationErrorText)
+                .font(.custom("Avenir Next", size: 14))
+        }
+    }
+
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("iRate")
+                .font(.custom("Avenir Next", size: 28))
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+
+            Text("Currency conversion in a glance")
+                .font(.custom("Avenir Next", size: 14))
+                .foregroundColor(.white.opacity(0.75))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var currencySelector: some View {
+        HStack(spacing: 14) {
+            currencyCard(
+                title: "From",
+                code: baseCr,
+                accent: Color(red: 0.40, green: 0.78, blue: 0.95)
+            ) {
+                focusedInput = false
+                activeSheet = .base
             }
-            .padding(.top, 50)
-            .padding(.bottom, 1)
-            
-            
-            if isPayloadCall == true{
-                ZStack{
-                    Color.black.opacity(0.3)
-                    ActivityIndicator(isAnimating: $isPayloadCall, style: .large, color: .white)
-                }
-                
+
+            swapIcon
+
+            currencyCard(
+                title: "To",
+                code: desCrCode,
+                accent: Color(red: 0.98, green: 0.61, blue: 0.38)
+            ) {
+                focusedInput = false
+                activeSheet = .destination
             }
-            
-            if showSheet == true{
-                ZStack{
-                    VStack(spacing: 0){
-                        HStack{
-                            Color.black.opacity(0.3)
-                        }
-                        
-                        .frame(height: UIScreen.main.bounds.height*0.3)
-                        
-                        .onTapGesture {
-                            showSheet = false
-                            searchCr = ""
-                        }
-                        
-                        ZStack{
-                            VStack(spacing:8){
-                                Text(currencyCode == .curentCurrency ? someText : alterText)
-                                    .padding()
-                                    .font(.headline)
-                                    .bold()
-                                TextField("Search here", text: $searchCr)
-                                    .keyboardType(.default)
-                                    .padding(.horizontal,20)
-                                    .frame(height: 40)
-                                    .background(Color.white)
-                                    .cornerRadius(10)
-                                    .padding(.top,20)
-                                
-                                List{
-                                    
-                                    ForEach( searchCr.isEmpty ? onlyCrCodes :  onlyCrCodes.filter({$0.lowercased().contains(searchCr.lowercased())}), id: \.self){ currency in
-                                        
-                                        SelectionRow(title: currency, selectedItem: $selectedItem, showSheet: $showSheet)
-                                        { title in
-                                    
-                                            if currencyCode == .curentCurrency{
-                                                baseCr = title
-                                                searchCr=""
-                                            }
-                                            else {
-                                                desCrCode = title
-                                                searchCr = ""
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .background(Color(UIColor.systemGray6))
-                        }
-                    }
+        }
+    }
+
+    private var swapIcon: some View {
+        ZStack {
+            Circle()
+                .fill(Color.white.opacity(0.12))
+                .frame(width: 38, height: 38)
+
+            Image(systemName: "arrow.left.arrow.right")
+                .foregroundColor(.white.opacity(0.9))
+                .font(.system(size: 14, weight: .semibold))
+        }
+        .padding(.top, 12)
+    }
+
+    private func currencyCard(title: String, code: String, accent: Color, onTap: @escaping () -> Void) -> some View {
+        Button(action: onTap) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(title)
+                    .font(.custom("Avenir Next", size: 12))
+                    .foregroundColor(.white.opacity(0.65))
+
+                HStack(spacing: 8) {
+                    Text(code)
+                        .font(.custom("Avenir Next", size: 20))
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.white.opacity(0.7))
+                        .font(.system(size: 12, weight: .semibold))
                 }
-                .ignoresSafeArea()
-                .padding(.bottom,1)
+
+                Capsule()
+                    .fill(accent)
+                    .frame(width: 36, height: 4)
             }
-            
-            if errorAlert == true{
-                VStack(alignment: .center){
-                    
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(Color.white.opacity(0.10))
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var amountCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Amount")
+                .font(.custom("Avenir Next", size: 12))
+                .foregroundColor(.white.opacity(0.65))
+
+            TextField("Enter an amount", text: $baseAmount)
+                .keyboardType(.decimalPad)
+                .focused($focusedInput)
+                .font(.custom("Avenir Next", size: 20))
+                .foregroundColor(.white)
+                .padding(.vertical, 8)
+                .onChange(of: baseAmount) { _ in
+                    validation()
                 }
-                .toast(showToast: $errorAlert,position: .middle, toastContent: {
-                    Text(handleError == .apiError ? apiErrorText : validationErrorText)
-                })
-                .onAppear{
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        errorAlert = false
+
+            Divider()
+                .background(Color.white.opacity(0.2))
+        }
+        .padding(18)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.white.opacity(0.10))
+        )
+    }
+
+    private var resultCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Converted")
+                .font(.custom("Avenir Next", size: 12))
+                .foregroundColor(.white.opacity(0.65))
+
+            Text(result.isEmpty ? "—" : result)
+                .font(.custom("Avenir Next", size: 24))
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(Color.white.opacity(0.12))
+        )
+    }
+
+    private var conversionsList: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("All rates")
+                .font(.custom("Avenir Next", size: 14))
+                .fontWeight(.semibold)
+                .foregroundColor(.white.opacity(0.85))
+
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 10) {
+                    ForEach(fullList, id: \.self) { currency in
+                        HStack {
+                            Text(currency)
+                                .font(.custom("Avenir Next", size: 14))
+                                .foregroundColor(.white)
+                            Spacer()
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 14)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.white.opacity(0.08))
+                        )
                     }
                 }
             }
         }
+        .padding(.bottom, 20)
+    }
+
+    private var loadingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
+            ActivityIndicator(isAnimating: $isPayloadCall, style: .large, color: .white)
+        }
+    }
+}
+
+private struct CurrencyPickerSheet: View {
+    let title: String
+    @Binding var searchText: String
+    let codes: [String]
+    let onSelect: (String) -> Void
+
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.09, green: 0.12, blue: 0.20),
+                    Color(red: 0.12, green: 0.18, blue: 0.28)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            VStack(spacing: 14) {
+                Capsule()
+                    .fill(Color.white.opacity(0.35))
+                    .frame(width: 48, height: 5)
+                    .padding(.top, 8)
+
+                Text(title)
+                    .font(.custom("Avenir Next", size: 18))
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+
+                HStack(spacing: 10) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.white.opacity(0.7))
+                    TextField("Search currency", text: $searchText)
+                        .textInputAutocapitalization(.characters)
+                        .foregroundColor(.white)
+                }
+                .padding(12)
+                .background(Color.white.opacity(0.12))
+                .cornerRadius(12)
+                .padding(.horizontal, 16)
+
+                List {
+                    ForEach(filteredCodes, id: \.self) { code in
+                        Button(action: { onSelect(code) }) {
+                            HStack {
+                                Text(code)
+                                    .font(.custom("Avenir Next", size: 16))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            .padding(.vertical, 6)
+                        }
+                        .listRowBackground(Color.white.opacity(0.06))
+                    }
+                }
+                .scrollContentBackground(.hidden)
+                .listStyle(.plain)
+            }
+        }
+    }
+
+    private var filteredCodes: [String] {
+        if searchText.isEmpty {
+            return codes
+        }
+        return codes.filter { $0.localizedCaseInsensitiveContains(searchText) }
     }
 }
 
@@ -327,5 +400,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
-
