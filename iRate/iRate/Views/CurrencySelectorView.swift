@@ -12,6 +12,7 @@ struct CurrencySelectorView: View {
     let destinationCode: String
     let onBaseTap: () -> Void
     let onDestinationTap: () -> Void
+    let onSwap: () -> Void
 
     var body: some View {
         HStack(spacing: 14) {
@@ -22,7 +23,10 @@ struct CurrencySelectorView: View {
                 onTap: onBaseTap
             )
 
-            swapIcon
+            Button(action: onSwap) {
+                swapIcon
+            }
+            .buttonStyle(.plain)
 
             CurrencyCardView(
                 title: "To",

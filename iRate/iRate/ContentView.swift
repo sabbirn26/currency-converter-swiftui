@@ -37,6 +37,12 @@ struct ContentView: View {
                     onDestinationTap: {
                         focusedInput = false
                         activeSheet = .destination
+                    },
+                    onSwap: {
+                        let oldBase = viewModel.baseCr
+                        viewModel.baseCr = viewModel.desCrCode
+                        viewModel.desCrCode = oldBase
+                        viewModel.validation()
                     }
                 )
 
