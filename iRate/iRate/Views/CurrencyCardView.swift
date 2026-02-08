@@ -21,6 +21,9 @@ struct CurrencyCardView: View {
                     .foregroundColor(.white.opacity(0.65))
 
                 HStack(spacing: 8) {
+                    Text(CurrencyFlag.emoji(for: code))
+                        .font(.system(size: 18))
+
                     Text(code)
                         .font(.custom("Avenir Next", size: 20))
                         .fontWeight(.semibold)

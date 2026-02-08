@@ -47,7 +47,10 @@ struct CurrencyPickerSheet: View {
                 List {
                     ForEach(filteredCodes, id: \.self) { code in
                         Button(action: { onSelect(code) }) {
-                            HStack {
+                            HStack(spacing: 10) {
+                                Text(CurrencyFlag.emoji(for: code))
+                                    .font(.system(size: 18))
+
                                 Text(code)
                                     .font(.custom("Avenir Next", size: 16))
                                     .foregroundColor(.white)
