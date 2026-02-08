@@ -53,7 +53,9 @@ struct ContentView: View {
 
                 ResultCardView(resultText: viewModel.result)
 
-                ConversionsListView(items: viewModel.fullList)
+                ConversionsListView(items: viewModel.fullList, onRefresh: {
+                    await viewModel.refresh()
+                })
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)

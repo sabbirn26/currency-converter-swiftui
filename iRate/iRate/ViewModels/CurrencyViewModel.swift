@@ -47,6 +47,11 @@ final class CurrencyViewModel: ObservableObject {
         makeRequest(amount: amount)
     }
 
+    @MainActor
+    func refresh() async {
+        validation()
+    }
+
     private func parsedAmount() -> Double? {
         let trimmed = baseAmount.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty || trimmed == "." { return nil }

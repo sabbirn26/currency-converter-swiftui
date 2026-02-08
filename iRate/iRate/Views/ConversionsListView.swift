@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ConversionsListView: View {
     let items: [String]
+    let onRefresh: () async -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -36,6 +37,9 @@ struct ConversionsListView: View {
                     }
                 }
                 .animation(.easeInOut(duration: 0.25), value: items)
+            }
+            .refreshable {
+                await onRefresh()
             }
         }
     }
