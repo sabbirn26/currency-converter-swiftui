@@ -12,6 +12,7 @@ struct ContentView: View {
     @FocusState private var focusedInput: Bool
     @State private var searchCr = ""
     @State private var activeSheet: PickerTarget?
+    @State private var showContent = false
 
     enum PickerTarget: Identifiable {
         case base
@@ -56,6 +57,9 @@ struct ContentView: View {
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
+            .opacity(showContent ? 1 : 0)
+            .offset(y: showContent ? 0 : 12)
+            .animation(.easeOut(duration: 0.5), value: showContent)
 
             LoadingOverlayView(isLoading: $viewModel.isPayloadCall)
         }
@@ -81,6 +85,7 @@ struct ContentView: View {
         }
         .onAppear {
             viewModel.validation()
+            showContent = true
         }
         .toast(showToast: $viewModel.errorAlert, position: .middle) {
             Text(viewModel.errorMessage)

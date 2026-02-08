@@ -13,6 +13,7 @@ struct CurrencySelectorView: View {
     let onBaseTap: () -> Void
     let onDestinationTap: () -> Void
     let onSwap: () -> Void
+    @State private var swapRotation: Double = 0
 
     var body: some View {
         HStack(spacing: 14) {
@@ -23,7 +24,12 @@ struct CurrencySelectorView: View {
                 onTap: onBaseTap
             )
 
-            Button(action: onSwap) {
+            Button(action: {
+                withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
+                    swapRotation += 180
+                }
+                onSwap()
+            }) {
                 swapIcon
             }
             .buttonStyle(.plain)
@@ -46,6 +52,7 @@ struct CurrencySelectorView: View {
             Image(systemName: "arrow.left.arrow.right")
                 .foregroundColor(.white.opacity(0.9))
                 .font(.system(size: 14, weight: .semibold))
+                .rotationEffect(.degrees(swapRotation))
         }
         .padding(.top, 12)
     }

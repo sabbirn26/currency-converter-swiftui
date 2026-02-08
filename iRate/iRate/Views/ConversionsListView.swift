@@ -32,8 +32,10 @@ struct ConversionsListView: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(Color.white.opacity(0.08))
                         )
+                        .transition(.opacity)
                     }
                 }
+                .animation(.easeInOut(duration: 0.25), value: items)
             }
         }
     }
