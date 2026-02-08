@@ -13,7 +13,7 @@ struct ConversionsListView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("All rates")
-                .font(.custom("Avenir Next", size: 14))
+                .font(.custom("American Typewriter", size: 14))
                 .fontWeight(.semibold)
                 .foregroundColor(.white.opacity(0.85))
 
@@ -22,7 +22,7 @@ struct ConversionsListView: View {
                     ForEach(items, id: \.self) { currency in
                         HStack {
                             Text(currency)
-                                .font(.custom("Avenir Next", size: 14))
+                                .font(.custom("American Typewriter", size: 14))
                                 .foregroundColor(.white)
                             Spacer()
                         }

@@ -15,13 +15,13 @@ struct AmountCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Amount")
-                .font(.custom("Avenir Next", size: 12))
+                .font(.custom("American Typewriter", size: 12))
                 .foregroundColor(.white.opacity(0.65))
 
             TextField("Enter an amount", text: $amountText)
                 .keyboardType(.decimalPad)
                 .focused($isFocused)
-                .font(.custom("Avenir Next", size: 20))
+                .font(.custom("American Typewriter", size: 20))
                 .foregroundColor(.white)
                 .padding(.vertical, 8)
                 .onChange(of: amountText) { _ in

@@ -27,7 +27,7 @@ struct CurrencyPickerSheet: View {
 
             VStack(spacing: 14) {
                 Text(title)
-                    .font(.custom("Avenir Next", size: 18))
+                    .font(.custom("American Typewriter", size: 18))
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
                     .padding(.top, 12)
@@ -52,7 +52,7 @@ struct CurrencyPickerSheet: View {
                                     .font(.system(size: 18))
 
                                 Text(code)
-                                    .font(.custom("Avenir Next", size: 16))
+                                    .font(.custom("American Typewriter", size: 16))
                                     .foregroundColor(.white)
                                 Spacer()
                             }

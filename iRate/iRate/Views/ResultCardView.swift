@@ -14,11 +14,11 @@ struct ResultCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Converted")
-                .font(.custom("Avenir Next", size: 12))
+                .font(.custom("American Typewriter", size: 12))
                 .foregroundColor(.white.opacity(0.65))
 
             Text(resultText.isEmpty ? "—" : resultText)
-                .font(.custom("Avenir Next", size: 24))
+                .font(.custom("American Typewriter", size: 24))
                 .fontWeight(.bold)
                 .foregroundColor(.white)
                 .scaleEffect(bump ? 1.03 : 1.0)

@@ -89,7 +89,7 @@ struct ContentView: View {
         }
         .toast(showToast: $viewModel.errorAlert, position: .middle) {
             Text(viewModel.errorMessage)
-                .font(.custom("Avenir Next", size: 14))
+                .font(.custom("American Typewriter", size: 14))
         }
     }
 }

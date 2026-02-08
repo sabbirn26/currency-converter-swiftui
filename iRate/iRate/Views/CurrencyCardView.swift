@@ -17,7 +17,7 @@ struct CurrencyCardView: View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 8) {
                 Text(title)
-                    .font(.custom("Avenir Next", size: 12))
+                    .font(.custom("American Typewriter", size: 12))
                     .foregroundColor(.white.opacity(0.65))
 
                 HStack(spacing: 8) {
@@ -25,7 +25,7 @@ struct CurrencyCardView: View {
                         .font(.system(size: 18))
 
                     Text(code)
-                        .font(.custom("Avenir Next", size: 20))
+                        .font(.custom("American Typewriter", size: 20))
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
 
