@@ -65,9 +65,6 @@ Screenshots 📱
 Rates are fetched from:
 `https://v6.exchangerate-api.com`
 
-API key is configured in:
-`/Users/newroztech/Desktop/Personal Project And R&D/currency_converter_swiftui/iRate/iRate/ViewModels/CurrencyViewModel.swift`
-
 ## Installation 🔧
 
 1. Clone the repository
