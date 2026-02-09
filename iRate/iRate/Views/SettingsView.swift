@@ -52,7 +52,15 @@ struct SettingsView: View {
 extension SettingsView {
     private var headerCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            iRateLogoView()
+            Image("icon")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 90, height: 90)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                )
 
             Text(L10n.t("About iRate", language: appLanguage))
                 .font(.custom("American Typewriter", size: 18))
