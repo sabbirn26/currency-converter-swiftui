@@ -1,11 +1,11 @@
-# iRate 💱
-![Swift](https://swift.org)
-![Platform](https://developer.apple.com/ios/)
-![SwiftUI](https://developer.apple.com/xcode/swiftui/)
+[![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
+[![Platform](https://img.shields.io/badge/Platform-iOS-blue.svg)](https://developer.apple.com/ios/)
+[![SwiftUI](https://img.shields.io/badge/SwiftUI-5.0-green.svg)](https://developer.apple.com/xcode/swiftui/)
 
 iRate is a modern SwiftUI currency converter. It fetches live exchange rates, supports instant currency swaps, and keeps the interface clean and fast. The app includes haptics, search, and in-app language switching (English ↔ Bangla).
 
 Screenshots 📱
+
 <table>
   <tr>
     <td align="center">
@@ -71,11 +71,13 @@ API key is configured in:
 ## Installation 🔧
 
 1. Clone the repository
+
 ```bash
 git clone https://github.com/your-username/iRate.git
 ```
 
 2. Open the project in Xcode
+
 ```bash
 cd iRate
 open iRate.xcodeproj
@@ -93,6 +95,7 @@ open iRate.xcodeproj
 ## Localization 🌍
 
 iRate supports English and Bangla:
+
 - Toggle language inside Settings
 - Strings live in:
   - `en.lproj/Localizable.strings`
@@ -109,5 +112,6 @@ MIT (or your preferred license)
 ## Contact 📫
 
 Sabbir Nasir
+
 - LinkedIn: https://www.linkedin.com/in/sabbirn26/
 - GitHub: https://github.com/sabbirn26
