@@ -87,11 +87,11 @@ extension SettingsView {
                 .foregroundColor(.white)
 
             Toggle(isOn: isBanglaBinding) {
-                Text(L10n.t(appLanguage == "bn" ? "English" : "Bangla", language: appLanguage))
+                Text(L10n.t(appLanguage == "bn" ? "Bangla" : "English", language: appLanguage))
                     .font(.custom("American Typewriter", size: 14))
                     .foregroundColor(.white)
             }
-            .tint(.white)
+            .toggleStyle(DarkAccentToggleStyle())
             .padding(.vertical, 6)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -203,5 +203,34 @@ private struct SettingsLinkRow: View {
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.white.opacity(0.08))
         )
+    }
+}
+
+private struct DarkAccentToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+            Spacer()
+            ZStack(alignment: configuration.isOn ? .trailing : .leading) {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .fill(configuration.isOn ? Color(red: 0.40, green: 0.78, blue: 0.95).opacity(0.85)
+                                              : Color.white.opacity(0.12))
+                    .frame(width: 52, height: 30)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                    )
+
+                Circle()
+                    .fill(Color.white.opacity(0.95))
+                    .frame(width: 24, height: 24)
+                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                    .padding(3)
+            }
+            .animation(.easeInOut(duration: 0.18), value: configuration.isOn)
+            .onTapGesture {
+                configuration.isOn.toggle()
+            }
+        }
     }
 }
