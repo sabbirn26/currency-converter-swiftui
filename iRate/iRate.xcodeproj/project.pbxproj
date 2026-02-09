@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		898E1BDE2F39AFEF00334DFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898E1BBD2F39AFEF00334DFB /* Assets.xcassets */; };
+		898E1BDF2F39AFEF00334DFB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 898E1BC22F39AFEF00334DFB /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		89AAEB7A2F38A2180018CD83 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		898E1BBD2F39AFEF00334DFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		898E1BC42F39AFEF00334DFB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		898E1BC52F39AFEF00334DFB /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/Localizable.strings; sourceTree = "<group>"; };
 		89AAEB6C2F38A2160018CD83 /* iRate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iRate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89AAEB792F38A2180018CD83 /* iRateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iRateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		89AAEB832F38A2180018CD83 /* iRateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iRateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +84,8 @@
 			isa = PBXGroup;
 			children = (
 				89AAEB6E2F38A2160018CD83 /* iRate */,
+				898E1BC22F39AFEF00334DFB /* Localizable.strings */,
+				898E1BBD2F39AFEF00334DFB /* Assets.xcassets */,
 				89AAEB7C2F38A2180018CD83 /* iRateTests */,
 				89AAEB862F38A2180018CD83 /* iRateUITests */,
 				89AAEB6D2F38A2160018CD83 /* Products */,
@@ -215,6 +225,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				898E1BDE2F39AFEF00334DFB /* Assets.xcassets in Resources */,
+				898E1BDF2F39AFEF00334DFB /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +282,18 @@
 			targetProxy = 89AAEB842F38A2180018CD83 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		898E1BC22F39AFEF00334DFB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				898E1BC42F39AFEF00334DFB /* en */,
+				898E1BC52F39AFEF00334DFB /* bn */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		89AAEB8B2F38A2180018CD83 /* Debug */ = {
