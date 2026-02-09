@@ -70,7 +70,7 @@ Rates are fetched from:
 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/iRate.git
+git clone https://github.com/sabbirn26/iRate.git
 ```
 
 2. Open the project in Xcode
