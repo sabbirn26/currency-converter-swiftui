@@ -18,8 +18,9 @@ struct CurrencyPickerSheet: View {
         ZStack {
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color(red: 0.09, green: 0.12, blue: 0.20),
-                    Color(red: 0.12, green: 0.18, blue: 0.28)
+                    Color(red: 0.10, green: 0.13, blue: 0.20),
+                    Color(red: 0.12, green: 0.18, blue: 0.26),
+                    Color(red: 0.14, green: 0.22, blue: 0.30)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
