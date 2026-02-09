@@ -1,15 +1,11 @@
 # iRate 💱
+![Swift](https://swift.org)
+![Platform](https://developer.apple.com/ios/)
+![SwiftUI](https://developer.apple.com/xcode/swiftui/)
 
-[![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
-[![Platform](https://img.shields.io/badge/Platform-iOS-blue.svg)](https://developer.apple.com/ios/)
-[![SwiftUI](https://img.shields.io/badge/SwiftUI-5.0-green.svg)](https://developer.apple.com/xcode/swiftui/)
+iRate is a modern SwiftUI currency converter. It fetches live exchange rates, supports instant currency swaps, and keeps the interface clean and fast. The app includes haptics, search, and in-app language switching (English ↔ Bangla).
 
-iRate is a modern SwiftUI currency converter that fetches live exchange rates, supports instant swaps, and presents a clean, minimal UI with haptics and localization.
-
-## Screenshots 📱
-
-Replace with your actual image paths.
-
+Screenshots 📱
 <table>
   <tr>
     <td align="center">
@@ -21,43 +17,97 @@ Replace with your actual image paths.
       <em>Currency Picker</em>
     </td>
     <td align="center">
-      <img src="/screenshots/settings.png" width="250" alt="Settings"/><br/>
-      <em>Settings</em>
+      <img src="/screenshots/settings.png" width="250" alt="Settings Screen"/><br/>
+      <em>Settings Screen</em>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="/screenshots/settings_bangla.png" width="250" alt="Settings (Bangla)"/><br/>
+      <em>Settings (Bangla)</em>
     </td>
   </tr>
 </table>
 
 ## Features 🚀
 
-- Live currency conversion using ExchangeRate API
-- Instant currency swap
-- Pull‑to‑refresh rates list
-- Searchable currency picker (bottom sheet)
-- Haptic feedback for key actions
-- In‑app language toggle (English ↔ Bangla)
-- Modern SwiftUI UI with typewriter‑style typography
-- Settings screen with developer profile and links
+- **Live Currency Conversion**
+  - Real-time exchange rates
+  - Instant currency swap
+  - Pull-to-refresh on rates list
 
-## Tech Stack 💻
+- **Search & Selection**
+  - Searchable currency picker
+  - Bottom sheet selection UI
+  - Flags for quick recognition
 
-- Framework: SwiftUI
-- Architecture: MVVM‑style (ViewModels + Views)
-- Networking: URLSession
-- Localization: Localizable.strings with in‑app language toggle
-- Haptics: UIImpactFeedbackGenerator / UINotificationFeedbackGenerator
+- **Experience**
+  - Typewriter-style typography
+  - Haptic feedback for key actions
+  - In-app language toggle (English ↔ Bangla)
+
+- **Settings**
+  - About section
+  - Developer profile
+  - External links
+
+## Technology Stack 💻
+
+- **Framework:** SwiftUI
+- **Architecture:** MVVM-style (ViewModels + Views)
+- **Networking:** URLSession
+- **API:** ExchangeRate-API (v6)
+- **Localization:** Localizable.strings + in-app toggle
+- **Haptics:** UIImpactFeedbackGenerator / UINotificationFeedbackGenerator
 
 ## API 🔌
 
 Rates are fetched from:
 `https://v6.exchangerate-api.com`
 
-You can configure your API key in:
-`CurrencyViewModel.swift`
+API key is configured in:
+`/Users/newroztech/Desktop/Personal Project And R&D/currency_converter_swiftui/iRate/iRate/ViewModels/CurrencyViewModel.swift`
 
 ## Installation 🔧
 
-1. Clone the repo
-
+1. Clone the repository
 ```bash
-git clone https://github.com/sabbirn26/iRate.git
+git clone https://github.com/your-username/iRate.git
 ```
+
+2. Open the project in Xcode
+```bash
+cd iRate
+open iRate.xcodeproj
+```
+
+3. Build and run
+
+## Project Structure 🧱
+
+- **Views:** UI components and screens
+- **ViewModels:** API handling and view state
+- **Utilities:** Haptics, localization, keyboard helpers
+- **Assets:** App icons and images
+
+## Localization 🌍
+
+iRate supports English and Bangla:
+- Toggle language inside Settings
+- Strings live in:
+  - `en.lproj/Localizable.strings`
+  - `bn.lproj/Localizable.strings`
+
+## Contributions 🤝
+
+Contributions are welcome. Feel free to submit a Pull Request.
+
+## License 📝
+
+MIT (or your preferred license)
+
+## Contact 📫
+
+Sabbir Nasir
+- LinkedIn: https://www.linkedin.com/in/sabbirn26/
+- GitHub: https://github.com/sabbirn26
