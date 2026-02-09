@@ -79,7 +79,7 @@ extension SettingsView {
                 .foregroundColor(.white)
 
             Toggle(isOn: isBanglaBinding) {
-                Text(L10n.t("Bangla", language: appLanguage))
+                Text(L10n.t(appLanguage == "bn" ? "English" : "Bangla", language: appLanguage))
                     .font(.custom("American Typewriter", size: 14))
                     .foregroundColor(.white)
             }
