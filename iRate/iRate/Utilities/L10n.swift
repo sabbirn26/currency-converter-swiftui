@@ -15,4 +15,10 @@ enum L10n {
         }
         return NSLocalizedString(key, comment: "")
     }
+
+    static func format(_ key: String, language: String, _ arguments: CVarArg...) -> String {
+        let format = t(key, language: language)
+        let locale = Locale(identifier: language == "bn" ? "bn_BD" : "en_US")
+        return String(format: format, locale: locale, arguments: arguments)
+    }
 }

@@ -2,8 +2,6 @@
 //  CurrencyPickerSheet.swift
 //  iRate
 //
-//  Created by Sabbir Nasir on 2/8/26.
-//
 
 import SwiftUI
 
@@ -11,68 +9,134 @@ struct CurrencyPickerSheet: View {
     let title: String
     @Binding var searchText: String
     let codes: [String]
+    let selectedCode: String
+    let favoriteCodes: Set<String>
     let onSelect: (String) -> Void
-    @AppStorage("appLanguage") private var appLanguage = "en"
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(red: 0.10, green: 0.13, blue: 0.20),
-                    Color(red: 0.12, green: 0.18, blue: 0.26),
-                    Color(red: 0.14, green: 0.22, blue: 0.30)
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AppBackgroundView()
 
-            VStack(spacing: 14) {
-                Text(L10n.t(title, language: appLanguage))
-                    .font(.custom("American Typewriter", size: 18))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding(.top, 12)
+            VStack(spacing: 16) {
+                VStack(spacing: 5) {
+                    Text(L10n.t(title, language: appLanguage))
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(AppTheme.primaryText)
+
+                    Text(L10n.t("Choose a currency", language: appLanguage))
+                        .font(.subheadline)
+                        .foregroundStyle(AppTheme.secondaryText)
+                }
+                .padding(.top, 12)
 
                 HStack(spacing: 10) {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(.white.opacity(0.7))
-                    TextField(L10n.t("Search currency", language: appLanguage), text: $searchText)
-                        .textInputAutocapitalization(.characters)
-                        .foregroundColor(.white)
-                }
-                .padding(12)
-                .background(Color.white.opacity(0.12))
-                .cornerRadius(12)
-                .padding(.horizontal, 16)
+                        .foregroundStyle(AppTheme.secondaryText)
 
-                List {
-                    ForEach(filteredCodes, id: \.self) { code in
-                        Button(action: { onSelect(code) }) {
-                            HStack(spacing: 10) {
-                                Text(CurrencyFlag.emoji(for: code))
-                                    .font(.system(size: 18))
+                    TextField(
+                        L10n.t("Search currency", language: appLanguage),
+                        text: $searchText
+                    )
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+                    .foregroundStyle(AppTheme.primaryText)
 
-                                Text(code)
-                                    .font(.custom("American Typewriter", size: 16))
-                                    .foregroundColor(.white)
-                                Spacer()
-                            }
-                            .padding(.vertical, 6)
+                    if !searchText.isEmpty {
+                        Button {
+                            searchText = ""
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(AppTheme.secondaryText)
                         }
-                        .listRowBackground(Color.white.opacity(0.06))
+                        .buttonStyle(.plain)
                     }
                 }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .background(AppTheme.elevatedBackground, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(AppTheme.border, lineWidth: 1)
+                }
+                .padding(.horizontal, 20)
+
+                ScrollView(showsIndicators: false) {
+                    LazyVStack(spacing: 9) {
+                        ForEach(filteredCodes, id: \.self) { code in
+                            Button {
+                                onSelect(code)
+                            } label: {
+                                HStack(spacing: 12) {
+                                    Text(CurrencyFlag.emoji(for: code))
+                                        .font(.system(size: 23))
+
+                                    Text(code)
+                                        .font(.system(.body, design: .rounded, weight: .semibold))
+                                        .foregroundStyle(AppTheme.primaryText)
+
+                                    if favoriteCodes.contains(code) {
+                                        Image(systemName: "star.fill")
+                                            .font(.caption)
+                                            .foregroundStyle(AppTheme.warning)
+                                    }
+
+                                    Spacer()
+
+                                    if code == selectedCode {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundStyle(AppTheme.accent)
+                                    } else {
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption.weight(.bold))
+                                            .foregroundStyle(AppTheme.secondaryText)
+                                    }
+                                }
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                                .background(
+                                    code == selectedCode
+                                        ? AppTheme.accent.opacity(0.12)
+                                        : AppTheme.elevatedBackground,
+                                    in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                )
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .stroke(code == selectedCode ? AppTheme.accent.opacity(0.6) : AppTheme.border, lineWidth: 1)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        if filteredCodes.isEmpty {
+                            VStack(spacing: 10) {
+                                Image(systemName: "magnifyingglass")
+                                    .font(.title2)
+                                Text(L10n.t("No currencies found", language: appLanguage))
+                                    .font(.subheadline.weight(.medium))
+                            }
+                            .foregroundStyle(AppTheme.secondaryText)
+                            .padding(.top, 40)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 24)
+                }
             }
         }
     }
 
     private var filteredCodes: [String] {
-        if searchText.isEmpty {
-            return codes
+        let sortedCodes = codes.sorted {
+            let firstFavorite = favoriteCodes.contains($0)
+            let secondFavorite = favoriteCodes.contains($1)
+            if firstFavorite != secondFavorite {
+                return firstFavorite && !secondFavorite
+            }
+            return $0 < $1
         }
-        return codes.filter { $0.localizedCaseInsensitiveContains(searchText) }
+
+        guard !searchText.isEmpty else { return sortedCodes }
+        return sortedCodes.filter { $0.localizedCaseInsensitiveContains(searchText) }
     }
 }

@@ -2,58 +2,94 @@
 //  CurrencySelectorView.swift
 //  iRate
 //
-//  Created by Sabbir Nasir on 2/8/26.
-//
 
 import SwiftUI
 
 struct CurrencySelectorView: View {
     let baseCode: String
     let destinationCode: String
+    let isRefreshing: Bool
     let onBaseTap: () -> Void
     let onDestinationTap: () -> Void
     let onSwap: () -> Void
     @State private var swapRotation: Double = 0
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
-        HStack(spacing: 14) {
+        ViewThatFits(in: .horizontal) {
+            horizontalLayout
+            verticalLayout
+        }
+    }
+
+    private var horizontalLayout: some View {
+        HStack(spacing: 10) {
             CurrencyCardView(
                 title: "From",
                 code: baseCode,
-                accent: Color(red: 0.40, green: 0.78, blue: 0.95),
+                accent: AppTheme.accent,
                 onTap: onBaseTap
             )
+            .frame(minWidth: 120)
 
-            Button(action: {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
-                    swapRotation += 180
-                }
-                onSwap()
-            }) {
-                swapIcon
-            }
-            .buttonStyle(.plain)
+            swapButton
 
             CurrencyCardView(
                 title: "To",
                 code: destinationCode,
-                accent: Color(red: 0.98, green: 0.61, blue: 0.38),
+                accent: AppTheme.warning,
+                onTap: onDestinationTap
+            )
+            .frame(minWidth: 120)
+        }
+    }
+
+    private var verticalLayout: some View {
+        VStack(spacing: 10) {
+            CurrencyCardView(
+                title: "From",
+                code: baseCode,
+                accent: AppTheme.accent,
+                onTap: onBaseTap
+            )
+
+            swapButton
+
+            CurrencyCardView(
+                title: "To",
+                code: destinationCode,
+                accent: AppTheme.warning,
                 onTap: onDestinationTap
             )
         }
     }
 
-    private var swapIcon: some View {
-        ZStack {
-            Circle()
-                .fill(Color.white.opacity(0.12))
-                .frame(width: 38, height: 38)
+    private var swapButton: some View {
+        Button {
+            withAnimation(.spring(response: 0.38, dampingFraction: 0.65)) {
+                swapRotation += 180
+            }
+            onSwap()
+        } label: {
+            ZStack {
+                Circle()
+                    .fill(AppTheme.accentGradient)
+                    .frame(width: 42, height: 42)
+                    .shadow(color: AppTheme.accent.opacity(0.32), radius: 10, y: 5)
 
-            Image(systemName: "arrow.left.arrow.right")
-                .foregroundColor(.white.opacity(0.9))
-                .font(.system(size: 14, weight: .semibold))
-                .rotationEffect(.degrees(swapRotation))
+                if isRefreshing {
+                    ProgressView()
+                        .controlSize(.small)
+                        .tint(.white)
+                } else {
+                    Image(systemName: "arrow.left.arrow.right")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white)
+                        .rotationEffect(.degrees(swapRotation))
+                }
+            }
         }
-        .padding(.top, 12)
+        .buttonStyle(.plain)
+        .accessibilityLabel(L10n.t("Swap currencies", language: appLanguage))
     }
 }

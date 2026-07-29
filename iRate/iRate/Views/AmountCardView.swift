@@ -2,44 +2,81 @@
 //  AmountCardView.swift
 //  iRate
 //
-//  Created by Sabbir Nasir on 2/8/26.
-//
 
 import SwiftUI
 
 struct AmountCardView: View {
     @Binding var amountText: String
     @FocusState.Binding var isFocused: Bool
-    let onChange: () -> Void
-    @AppStorage("appLanguage") private var appLanguage = "en"
+    let onQuickAmount: (Double) -> Void
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
+
+    private let quickAmounts: [Double] = [1, 10, 100, 1000]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 14) {
             Text(L10n.t("Amount", language: appLanguage))
-                .font(.custom("American Typewriter", size: 12))
-                .foregroundColor(.white.opacity(0.65))
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppTheme.primaryText)
 
-            TextField(L10n.t("Enter an amount", language: appLanguage), text: $amountText)
+            HStack(spacing: 12) {
+                TextField(
+                    L10n.t("Enter an amount", language: appLanguage),
+                    text: $amountText
+                )
                 .keyboardType(.decimalPad)
                 .focused($isFocused)
-                .submitLabel(.go)
-                .font(.custom("American Typewriter", size: 20))
-                .foregroundColor(.white)
-                .padding(.vertical, 8)
-                .onChange(of: amountText) { _ in
-                    onChange()
-                }
-                .onSubmit {
-                    isFocused = false
-                }
+                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .foregroundStyle(AppTheme.primaryText)
 
-            Divider()
-                .background(Color.white.opacity(0.2))
+                Image(systemName: "number")
+                    .font(.headline)
+                    .foregroundStyle(AppTheme.accent)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(AppTheme.secondaryBackground, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(isFocused ? AppTheme.accent : AppTheme.border, lineWidth: isFocused ? 1.5 : 1)
+            }
+            .animation(.easeInOut(duration: 0.18), value: isFocused)
+
+            VStack(alignment: .leading, spacing: 10) {
+                Text(L10n.t("Quick amounts", language: appLanguage))
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(AppTheme.secondaryText)
+
+                LazyVGrid(
+                    columns: [GridItem(.adaptive(minimum: 64), spacing: 8)],
+                    spacing: 8
+                ) {
+                    ForEach(quickAmounts, id: \.self) { amount in
+                        Button {
+                            onQuickAmount(amount)
+                        } label: {
+                            Text(String(format: "%.0f", amount))
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(
+                                    amountText == String(format: "%.0f", amount)
+                                        ? Color.white
+                                        : AppTheme.primaryText
+                                )
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 9)
+                                .background {
+                                    Capsule()
+                                        .fill(
+                                            amountText == String(format: "%.0f", amount)
+                                                ? AnyShapeStyle(AppTheme.accentGradient)
+                                                : AnyShapeStyle(AppTheme.secondaryBackground)
+                                        )
+                                }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
         }
-        .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.10))
-        )
     }
 }

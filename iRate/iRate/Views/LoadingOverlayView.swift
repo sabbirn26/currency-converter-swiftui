@@ -2,21 +2,34 @@
 //  LoadingOverlayView.swift
 //  iRate
 //
-//  Created by Sabbir Nasir on 2/8/26.
-//
 
 import SwiftUI
 
 struct LoadingOverlayView: View {
-    @Binding var isLoading: Bool
+    let isLoading: Bool
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
         if isLoading {
             ZStack {
-                Color.black.opacity(0.35)
+                AppTheme.background.opacity(0.78)
                     .ignoresSafeArea()
-                ActivityIndicator(isAnimating: $isLoading, style: .large, color: .white)
+
+                VStack(spacing: 14) {
+                    ProgressView()
+                        .controlSize(.large)
+                        .tint(AppTheme.accent)
+
+                    Text(L10n.t("Updating rates", language: appLanguage))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppTheme.primaryText)
+                }
+                .padding(.horizontal, 28)
+                .padding(.vertical, 22)
+                .appCard(cornerRadius: 22)
             }
+            .transition(.opacity)
+            .zIndex(10)
         }
     }
 }

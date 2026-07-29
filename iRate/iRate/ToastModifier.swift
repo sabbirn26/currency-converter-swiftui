@@ -26,10 +26,14 @@ private struct ToastModifier<ToastContent: View>: ViewModifier {
                 toastContent()
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
-                    .background(Color.black.opacity(0.8))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .shadow(radius: 6)
+                    .background(AppTheme.elevatedBackground)
+                    .foregroundStyle(AppTheme.primaryText)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(AppTheme.border, lineWidth: 1)
+                    }
+                    .shadow(color: AppTheme.shadow, radius: 12, y: 6)
                     .frame(maxWidth: .infinity)
                     .padding(.horizontal, 24)
                     .frame(maxHeight: .infinity, alignment: alignment)

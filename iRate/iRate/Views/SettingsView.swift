@@ -2,19 +2,18 @@
 //  SettingsView.swift
 //  iRate
 //
-//  Created by Sabbir Nasir on 2/8/26.
-//
 
 import SwiftUI
 
 struct SettingsView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @AppStorage("appLanguage") private var appLanguage = "en"
+    @Environment(\.dismiss) private var dismiss
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
+    @AppStorage(AppStorageKeys.appTheme) private var appTheme = AppThemeMode.system.rawValue
+    @AppStorage(AppStorageKeys.hapticsEnabled) private var hapticsEnabled = true
 
-    let defaultURL = URL(string: "https://google.com/")!
-    let githubURL = URL(string: "https://youtube.com/")!
-    let linkedinURL = URL(string: "https://www.linkedin.com/in/sabbirn26/")!
-    let personalURL = URL(string: "https://github.com/sabbirn26")!
+    private let defaultURL = URL(string: "https://google.com/")!
+    private let linkedinURL = URL(string: "https://www.linkedin.com/in/sabbirn26/")!
+    private let personalURL = URL(string: "https://github.com/sabbirn26")!
 
     var body: some View {
         NavigationStack {
@@ -24,213 +23,272 @@ struct SettingsView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 18) {
                         headerCard
-                        languageCard
+                        appearanceCard
+                        preferencesCard
                         developerCard
                         linksCard
                     }
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 32)
                 }
             }
             .navigationTitle(L10n.t("Settings", language: appLanguage))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    XmarkButton(dismiss: xButtonAction)
+                ToolbarItem(placement: .topBarLeading) {
+                    XmarkButton {
+                        dismiss()
+                    }
                 }
             }
         }
-        .tint(.white)
+        .tint(AppTheme.accentDeep)
     }
 }
 
-#Preview {
-    SettingsView()
-}
-
-extension SettingsView {
-    private var headerCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
+private extension SettingsView {
+    var headerCard: some View {
+        HStack(spacing: 16) {
             Image("icon")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 90, height: 90)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                )
+                .frame(width: 74, height: 74)
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(AppTheme.border, lineWidth: 1)
+                }
+                .shadow(color: AppTheme.accent.opacity(0.22), radius: 12, y: 6)
 
-            Text(L10n.t("About iRate", language: appLanguage))
-                .font(.custom("American Typewriter", size: 18))
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("iRate")
+                    .font(.system(size: 25, weight: .bold, design: .rounded))
+                    .foregroundStyle(AppTheme.primaryText)
 
-            Text(L10n.t("iRate is a sleek currency converter built with SwiftUI. It fetches live exchange rates, lets you swap currencies instantly, and surfaces results in a clean, modern interface. The app is designed to be fast and simple: pick your currencies, enter an amount, and see conversions at a glance.", language: appLanguage))
-                .font(.custom("American Typewriter", size: 14))
-                .foregroundColor(.white.opacity(0.8))
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.10))
-        )
-    }
-
-    private var languageCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(L10n.t("Language", language: appLanguage))
-                .font(.custom("American Typewriter", size: 18))
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
-
-            Toggle(isOn: isBanglaBinding) {
-                Text(L10n.t(appLanguage == "bn" ? "Bangla" : "English", language: appLanguage))
-                    .font(.custom("American Typewriter", size: 14))
-                    .foregroundColor(.white)
+                Text(L10n.t("Fast, focused currency conversion.", language: appLanguage))
+                    .font(.subheadline)
+                    .foregroundStyle(AppTheme.secondaryText)
             }
-            .toggleStyle(DarkAccentToggleStyle())
-            .padding(.vertical, 6)
+
+            Spacer()
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.10))
-        )
+        .appCard(cornerRadius: 24)
     }
 
-    private var developerCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(L10n.t("Developer", language: appLanguage))
-                .font(.custom("American Typewriter", size: 18))
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
+    var appearanceCard: some View {
+        SettingsCard(title: L10n.t("Appearance", language: appLanguage), icon: "circle.lefthalf.filled") {
+            Picker(L10n.t("Appearance", language: appLanguage), selection: $appTheme) {
+                ForEach(AppThemeMode.allCases) { mode in
+                    Text(L10n.t(mode.localizationKey, language: appLanguage))
+                        .tag(mode.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: appTheme) { _ in
+                Haptics.selection()
+            }
+        }
+    }
 
-            Image("devPhoto")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 96, height: 96)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
+    var preferencesCard: some View {
+        SettingsCard(title: L10n.t("Preferences", language: appLanguage), icon: "switch.2") {
+            VStack(spacing: 0) {
+                SettingsToggleRow(
+                    title: L10n.t("Haptic feedback", language: appLanguage),
+                    subtitle: L10n.t("Feel subtle feedback for key actions.", language: appLanguage),
+                    icon: "waveform",
+                    isOn: $hapticsEnabled
                 )
+                .onChange(of: hapticsEnabled) { enabled in
+                    if enabled {
+                        Haptics.success()
+                    }
+                }
 
-            Text(L10n.t("I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI.", language: appLanguage))
-                .font(.custom("American Typewriter", size: 14))
-                .foregroundColor(.white.opacity(0.8))
+                Divider()
+                    .overlay(AppTheme.border)
+                    .padding(.vertical, 12)
 
-            VStack(alignment: .leading, spacing: 8) {
+                SettingsToggleRow(
+                    title: L10n.t("Bangla", language: appLanguage),
+                    subtitle: L10n.t("Switch the app language.", language: appLanguage),
+                    icon: "character.book.closed",
+                    isOn: isBanglaBinding
+                )
+            }
+        }
+    }
+
+    var developerCard: some View {
+        SettingsCard(title: L10n.t("Developer", language: appLanguage), icon: "hammer") {
+            VStack(alignment: .leading, spacing: 14) {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 14) {
+                        developerPhoto
+                        developerDescription
+                            .frame(minWidth: 200)
+                    }
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        developerPhoto
+                        developerDescription
+                    }
+                }
+
                 Link(destination: personalURL) {
-                    SettingsLinkRow(title: L10n.t("GitHub Profile", language: appLanguage))
+                    SettingsLinkRow(
+                        title: L10n.t("GitHub Profile", language: appLanguage),
+                        icon: "chevron.left.forwardslash.chevron.right"
+                    )
                 }
+
                 Link(destination: linkedinURL) {
-                    SettingsLinkRow(title: L10n.t("LinkedIn Profile", language: appLanguage))
+                    SettingsLinkRow(
+                        title: L10n.t("LinkedIn Profile", language: appLanguage),
+                        icon: "person.crop.circle"
+                    )
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.10))
-        )
     }
 
-    private var linksCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(L10n.t("Application", language: appLanguage))
-                .font(.custom("American Typewriter", size: 18))
-                .fontWeight(.semibold)
-                .foregroundColor(.white)
+    var developerPhoto: some View {
+        Image("devPhoto")
+            .resizable()
+            .scaledToFill()
+            .frame(width: 76, height: 76)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(AppTheme.border, lineWidth: 1)
+            }
+    }
 
-            VStack(alignment: .leading, spacing: 8) {
+    var developerDescription: some View {
+        Text(L10n.t("I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI.", language: appLanguage))
+            .font(.subheadline)
+            .foregroundStyle(AppTheme.secondaryText)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    var linksCard: some View {
+        SettingsCard(title: L10n.t("Application", language: appLanguage), icon: "info.circle") {
+            VStack(spacing: 10) {
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: L10n.t("Terms of Service", language: appLanguage))
+                    SettingsLinkRow(title: L10n.t("Terms of Service", language: appLanguage), icon: "doc.text")
                 }
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: L10n.t("Privacy Policy", language: appLanguage))
+                    SettingsLinkRow(title: L10n.t("Privacy Policy", language: appLanguage), icon: "hand.raised")
                 }
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: L10n.t("Company Website", language: appLanguage))
+                    SettingsLinkRow(title: L10n.t("Company Website", language: appLanguage), icon: "globe")
                 }
                 Link(destination: defaultURL) {
-                    SettingsLinkRow(title: L10n.t("Learn More", language: appLanguage))
+                    SettingsLinkRow(title: L10n.t("Learn More", language: appLanguage), icon: "sparkles")
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(
-            RoundedRectangle(cornerRadius: 18)
-                .fill(Color.white.opacity(0.10))
-        )
     }
 
-    private var isBanglaBinding: Binding<Bool> {
+    var isBanglaBinding: Binding<Bool> {
         Binding(
             get: { appLanguage == "bn" },
-            set: { appLanguage = $0 ? "bn" : "en" }
+            set: { value in
+                appLanguage = value ? "bn" : "en"
+                Haptics.selection()
+            }
         )
     }
+}
 
-    private func xButtonAction() {
-        presentationMode.wrappedValue.dismiss()
+private struct SettingsCard<Content: View>: View {
+    let title: String
+    let icon: String
+    let content: Content
+
+    init(
+        title: String,
+        icon: String,
+        @ViewBuilder content: () -> Content
+    ) {
+        self.title = title
+        self.icon = icon
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Label(title, systemImage: icon)
+                .font(.headline)
+                .foregroundStyle(AppTheme.primaryText)
+                .symbolRenderingMode(.hierarchical)
+
+            content
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(18)
+        .appCard(cornerRadius: 24)
+    }
+}
+
+private struct SettingsToggleRow: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(AppTheme.accentDeep)
+                    .frame(width: 36, height: 36)
+                    .background(AppTheme.accent.opacity(0.12), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppTheme.primaryText)
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(AppTheme.secondaryText)
+                }
+            }
+        }
+        .tint(AppTheme.accent)
     }
 }
 
 private struct SettingsLinkRow: View {
     let title: String
+    let icon: String
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(AppTheme.accentDeep)
+                .frame(width: 32)
+
             Text(title)
-                .font(.custom("American Typewriter", size: 14))
-                .foregroundColor(.white)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(AppTheme.primaryText)
 
             Spacer()
 
-            Image(systemName: "chevron.right")
-                .foregroundColor(.white.opacity(0.7))
-                .font(.system(size: 12, weight: .semibold))
+            Image(systemName: "arrow.up.right")
+                .font(.caption.weight(.bold))
+                .foregroundStyle(AppTheme.secondaryText)
         }
-        .padding(.vertical, 10)
         .padding(.horizontal, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.08))
-        )
+        .padding(.vertical, 11)
+        .background(AppTheme.secondaryBackground, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
     }
 }
 
-private struct DarkAccentToggleStyle: ToggleStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack {
-            configuration.label
-            Spacer()
-            ZStack(alignment: configuration.isOn ? .trailing : .leading) {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(configuration.isOn ? Color(red: 0.40, green: 0.78, blue: 0.95).opacity(0.85)
-                                              : Color.white.opacity(0.12))
-                    .frame(width: 52, height: 30)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
-                    )
-
-                Circle()
-                    .fill(Color.white.opacity(0.95))
-                    .frame(width: 24, height: 24)
-                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
-                    .padding(3)
-            }
-            .animation(.easeInOut(duration: 0.18), value: configuration.isOn)
-            .onTapGesture {
-                configuration.isOn.toggle()
-            }
-        }
-    }
+#Preview {
+    SettingsView()
 }

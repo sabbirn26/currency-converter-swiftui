@@ -14,11 +14,14 @@ struct XmarkButton: View {
         Button(action: dismiss) {
             Image(systemName: "xmark")
                 .font(.headline)
-                .foregroundColor(.white)
+                .foregroundStyle(AppTheme.primaryText)
                 .frame(width: 36, height: 36)
                 .background(
                     Circle()
-                        .fill(Color.black.opacity(0.35))
+                        .fill(AppTheme.secondaryBackground)
+                        .overlay {
+                            Circle().stroke(AppTheme.border, lineWidth: 1)
+                        }
                 )
         }
         .buttonStyle(.plain)

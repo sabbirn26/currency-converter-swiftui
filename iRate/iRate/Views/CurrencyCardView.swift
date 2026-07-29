@@ -2,8 +2,6 @@
 //  CurrencyCardView.swift
 //  iRate
 //
-//  Created by Sabbir Nasir on 2/8/26.
-//
 
 import SwiftUI
 
@@ -12,40 +10,43 @@ struct CurrencyCardView: View {
     let code: String
     let accent: Color
     let onTap: () -> Void
-    @AppStorage("appLanguage") private var appLanguage = "en"
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 9) {
                 Text(L10n.t(title, language: appLanguage))
-                    .font(.custom("American Typewriter", size: 12))
-                    .foregroundColor(.white.opacity(0.65))
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(AppTheme.secondaryText)
 
                 HStack(spacing: 8) {
                     Text(CurrencyFlag.emoji(for: code))
-                        .font(.system(size: 18))
+                        .font(.system(size: 21))
 
                     Text(code)
-                        .font(.custom("American Typewriter", size: 20))
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
+                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.primaryText)
+
+                    Spacer(minLength: 0)
 
                     Image(systemName: "chevron.down")
-                        .foregroundColor(.white.opacity(0.7))
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.caption.weight(.bold))
+                        .foregroundStyle(AppTheme.secondaryText)
                 }
 
                 Capsule()
                     .fill(accent)
-                    .frame(width: 36, height: 4)
+                    .frame(width: 32, height: 4)
             }
-            .padding(16)
+            .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(Color.white.opacity(0.10))
-            )
+            .background(AppTheme.secondaryBackground, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(AppTheme.border, lineWidth: 1)
+            }
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("\(L10n.t(title, language: appLanguage)), \(code)")
     }
 }
