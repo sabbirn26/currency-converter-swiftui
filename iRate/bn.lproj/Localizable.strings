@@ -52,5 +52,13 @@
 "Swap currencies" = "মুদ্রা অদলবদল করুন";
 "No favorites yet" = "এখনও কোনো পছন্দের মুদ্রা নেই";
 "Star a currency to keep it close." = "দ্রুত পেতে মুদ্রায় তারকা দিন।";
+"Convert" = "রূপান্তর";
+"Rates" = "মুদ্রার হার";
+"Exchange rates" = "বিনিময় হার";
+"Browse and choose any currency." = "সব মুদ্রা দেখুন এবং বেছে নিন।";
+"Try a different currency code." = "অন্য একটি মুদ্রার কোড দিয়ে চেষ্টা করুন।";
+"Favorite currencies" = "পছন্দের মুদ্রা";
+"Your saved currencies in one place." = "সংরক্ষিত মুদ্রাগুলো এক জায়গায়।";
+"Add favorites from the Rates tab." = "মুদ্রার হার ট্যাব থেকে পছন্দের মুদ্রা যোগ করুন।";
 "iRate is a sleek currency converter built with SwiftUI. It fetches live exchange rates, lets you swap currencies instantly, and surfaces results in a clean, modern interface. The app is designed to be fast and simple: pick your currencies, enter an amount, and see conversions at a glance." = "iRate একটি স্টাইলিশ কারেন্সি কনভার্টার যা SwiftUI দিয়ে তৈরি। এটি লাইভ এক্সচেঞ্জ রেট এনে দেয়, তাৎক্ষণিকভাবে মুদ্রা বদল করতে দেয়, এবং পরিষ্কার আধুনিক ইন্টারফেসে ফলাফল দেখায়। অ্যাপটি দ্রুত ও সহজ ব্যবহারের জন্য ডিজাইন করা: আপনার মুদ্রা বেছে নিন, পরিমাণ লিখুন, আর এক নজরে রূপান্তর দেখুন।";
 "I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI." = "আমি সাব্বির, একজন সফটওয়্যার ইঞ্জিনিয়ার ও কনটেন্ট ক্রিয়েটর, সবসময় নতুন প্রযুক্তি নিয়ে কাজ করি। এই প্রজেক্টটি আমার শেখার যাত্রার অংশ, সম্পূর্ণভাবে Swift এবং SwiftUI দিয়ে তৈরি।";

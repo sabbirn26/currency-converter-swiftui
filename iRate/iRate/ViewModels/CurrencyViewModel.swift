@@ -73,6 +73,10 @@ final class CurrencyViewModel: ObservableObject {
         rows.filter(\.isFavorite)
     }
 
+    var currencyRows: [CurrencyRateRow] {
+        rows
+    }
+
     var allRows: [CurrencyRateRow] {
         rows.filter { !$0.isFavorite }
     }

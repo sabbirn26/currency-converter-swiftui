@@ -6,6 +6,7 @@
 import SwiftUI
 
 struct SettingsView: View {
+    let showsCloseButton: Bool
     @Environment(\.dismiss) private var dismiss
     @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
     @AppStorage(AppStorageKeys.appTheme) private var appTheme = AppThemeMode.system.rawValue
@@ -14,6 +15,10 @@ struct SettingsView: View {
     private let defaultURL = URL(string: "https://google.com/")!
     private let linkedinURL = URL(string: "https://www.linkedin.com/in/sabbirn26/")!
     private let personalURL = URL(string: "https://github.com/sabbirn26")!
+
+    init(showsCloseButton: Bool = true) {
+        self.showsCloseButton = showsCloseButton
+    }
 
     var body: some View {
         NavigationStack {
@@ -36,9 +41,11 @@ struct SettingsView: View {
             .navigationTitle(L10n.t("Settings", language: appLanguage))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    XmarkButton {
-                        dismiss()
+                if showsCloseButton {
+                    ToolbarItem(placement: .topBarLeading) {
+                        XmarkButton {
+                            dismiss()
+                        }
                     }
                 }
             }

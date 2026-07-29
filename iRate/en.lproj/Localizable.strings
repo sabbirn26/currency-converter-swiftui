@@ -52,5 +52,13 @@
 "Swap currencies" = "Swap currencies";
 "No favorites yet" = "No favorites yet";
 "Star a currency to keep it close." = "Star a currency to keep it close.";
+"Convert" = "Convert";
+"Rates" = "Rates";
+"Exchange rates" = "Exchange rates";
+"Browse and choose any currency." = "Browse and choose any currency.";
+"Try a different currency code." = "Try a different currency code.";
+"Favorite currencies" = "Favorite currencies";
+"Your saved currencies in one place." = "Your saved currencies in one place.";
+"Add favorites from the Rates tab." = "Add favorites from the Rates tab.";
 "iRate is a sleek currency converter built with SwiftUI. It fetches live exchange rates, lets you swap currencies instantly, and surfaces results in a clean, modern interface. The app is designed to be fast and simple: pick your currencies, enter an amount, and see conversions at a glance." = "iRate is a sleek currency converter built with SwiftUI. It fetches live exchange rates, lets you swap currencies instantly, and surfaces results in a clean, modern interface. The app is designed to be fast and simple: pick your currencies, enter an amount, and see conversions at a glance.";
 "I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI." = "I'm Sabbir, a software engineer and content creator, constantly exploring new technologies. This project is part of my learning journey, built entirely with Swift and SwiftUI.";
