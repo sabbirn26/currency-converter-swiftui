@@ -23,7 +23,7 @@ struct CurrencySelectorView: View {
     }
 
     private var horizontalLayout: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 8) {
             CurrencyCardView(
                 title: "From",
                 code: baseCode,
@@ -74,7 +74,7 @@ struct CurrencySelectorView: View {
             ZStack {
                 Circle()
                     .fill(AppTheme.accentGradient)
-                    .frame(width: 42, height: 42)
+                    .frame(width: 40, height: 40)
                     .shadow(color: AppTheme.accent.opacity(0.32), radius: 10, y: 5)
 
                 if isRefreshing {

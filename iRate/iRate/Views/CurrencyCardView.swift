@@ -14,17 +14,17 @@ struct CurrencyCardView: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 9) {
+            VStack(alignment: .leading, spacing: 7) {
                 Text(L10n.t(title, language: appLanguage))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(AppTheme.secondaryText)
 
                 HStack(spacing: 8) {
                     Text(CurrencyFlag.emoji(for: code))
-                        .font(.system(size: 21))
+                        .font(.system(size: 20))
 
                     Text(code)
-                        .font(.system(size: 19, weight: .bold, design: .rounded))
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(AppTheme.primaryText)
 
                     Spacer(minLength: 0)
@@ -38,7 +38,7 @@ struct CurrencyCardView: View {
                     .fill(accent)
                     .frame(width: 32, height: 4)
             }
-            .padding(14)
+            .padding(12)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(AppTheme.secondaryBackground, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay {

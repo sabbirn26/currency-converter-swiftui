@@ -26,7 +26,7 @@ struct ConverterView: View {
         ZStack {
             AppBackgroundView()
 
-            VStack(spacing: 18) {
+            VStack(spacing: 12) {
                 HeaderView(onSettings: onOpenSettings)
                 converterCard
 
@@ -39,8 +39,8 @@ struct ConverterView: View {
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 20)
-            .padding(.top, 18)
-            .padding(.bottom, 12)
+            .padding(.top, 12)
+            .padding(.bottom, 8)
             .opacity(showContent ? 1 : 0)
             .offset(y: showContent ? 0 : 10)
             .animation(.easeOut(duration: 0.4), value: showContent)
@@ -84,7 +84,7 @@ struct ConverterView: View {
     }
 
     private var converterCard: some View {
-        VStack(spacing: 18) {
+        VStack(spacing: 14) {
             CurrencySelectorView(
                 baseCode: viewModel.baseCr,
                 destinationCode: viewModel.desCrCode,
@@ -131,8 +131,8 @@ struct ConverterView: View {
                 hasValidAmount: viewModel.hasValidAmount
             )
         }
-        .padding(18)
-        .appCard(cornerRadius: 28)
+        .padding(14)
+        .appCard(cornerRadius: 24)
     }
 
     private func selectCurrency(_ code: String, for target: PickerTarget) {

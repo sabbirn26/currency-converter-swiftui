@@ -14,7 +14,7 @@ struct AmountCardView: View {
     private let quickAmounts: [Double] = [1, 10, 100, 1000]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(L10n.t("Amount", language: appLanguage))
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(AppTheme.primaryText)
@@ -26,15 +26,15 @@ struct AmountCardView: View {
                 )
                 .keyboardType(.decimalPad)
                 .focused($isFocused)
-                .font(.system(size: 30, weight: .bold, design: .rounded))
+                .font(.system(size: 28, weight: .bold, design: .rounded))
                 .foregroundStyle(AppTheme.primaryText)
 
                 Image(systemName: "number")
                     .font(.headline)
                     .foregroundStyle(AppTheme.accent)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
             .background(AppTheme.secondaryBackground, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
@@ -42,7 +42,7 @@ struct AmountCardView: View {
             }
             .animation(.easeInOut(duration: 0.18), value: isFocused)
 
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text(L10n.t("Quick amounts", language: appLanguage))
                     .font(.caption.weight(.medium))
                     .foregroundStyle(AppTheme.secondaryText)
@@ -63,7 +63,7 @@ struct AmountCardView: View {
                                         : AppTheme.primaryText
                                 )
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 9)
+                                .padding(.vertical, 7)
                                 .background {
                                     Capsule()
                                         .fill(

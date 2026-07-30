@@ -14,7 +14,7 @@ struct ResultCardView: View {
     @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 9) {
             HStack {
                 Label(
                     L10n.t("Converted", language: appLanguage),
@@ -33,7 +33,7 @@ struct ResultCardView: View {
             }
 
             Text(hasValidAmount ? (resultText.isEmpty ? "—" : resultText) : L10n.t("Enter a valid amount", language: appLanguage))
-                .font(.system(size: hasValidAmount ? 31 : 18, weight: .bold, design: .rounded))
+                .font(.system(size: hasValidAmount ? 28 : 18, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)
@@ -46,13 +46,13 @@ struct ResultCardView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(AppTheme.accentGradient, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .padding(14)
+        .background(AppTheme.accentGradient, in: RoundedRectangle(cornerRadius: 19, style: .continuous))
         .overlay {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
+            RoundedRectangle(cornerRadius: 19, style: .continuous)
                 .stroke(.white.opacity(0.18), lineWidth: 1)
         }
-        .shadow(color: AppTheme.accentDeep.opacity(0.28), radius: 18, y: 10)
+        .shadow(color: AppTheme.accentDeep.opacity(0.28), radius: 14, y: 7)
         .onChange(of: resultText) { _ in
             withAnimation(.spring(response: 0.25, dampingFraction: 0.62)) {
                 bump = true
