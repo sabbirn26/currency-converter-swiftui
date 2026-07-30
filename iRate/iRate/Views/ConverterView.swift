@@ -7,6 +7,7 @@ import SwiftUI
 
 struct ConverterView: View {
     @ObservedObject var viewModel: CurrencyViewModel
+    let isActive: Bool
     let onOpenSettings: () -> Void
 
     @FocusState private var focusedInput: Bool
@@ -68,6 +69,13 @@ struct ConverterView: View {
         }
         .onAppear {
             showContent = true
+        }
+        .onChange(of: isActive) { active in
+            guard !active else { return }
+            focusedInput = false
+            searchCurrency = ""
+            viewModel.resetAmount()
+            hideKeyboard()
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {

@@ -7,6 +7,7 @@ import SwiftUI
 
 struct RatesView: View {
     @ObservedObject var viewModel: CurrencyViewModel
+    let isActive: Bool
     let onSelectCurrency: (String) -> Void
 
     @State private var searchText = ""
@@ -54,6 +55,11 @@ struct RatesView: View {
             .padding(.bottom, 12)
 
             LoadingOverlayView(isLoading: viewModel.isInitialLoading)
+        }
+        .onChange(of: isActive) { active in
+            guard !active else { return }
+            searchText = ""
+            hideKeyboard()
         }
     }
 

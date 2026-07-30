@@ -17,6 +17,7 @@ struct ContentView: View {
                 ZStack {
                     ConverterView(
                         viewModel: viewModel,
+                        isActive: selectedTab == .convert,
                         onOpenSettings: {
                             selectTab(.settings)
                         }
@@ -25,6 +26,7 @@ struct ContentView: View {
 
                     RatesView(
                         viewModel: viewModel,
+                        isActive: selectedTab == .rates,
                         onSelectCurrency: { code in
                             viewModel.selectDestination(code)
                             selectTab(.convert)

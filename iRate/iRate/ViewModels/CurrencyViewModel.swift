@@ -126,6 +126,10 @@ final class CurrencyViewModel: ObservableObject {
         }
     }
 
+    func resetAmount() {
+        baseAmount = "1.0"
+    }
+
     func selectQuickAmount(_ amount: Double) {
         baseAmount = String(format: "%.0f", amount)
     }
