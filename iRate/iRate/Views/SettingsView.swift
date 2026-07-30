@@ -43,6 +43,7 @@ struct SettingsView: View {
             }
             .navigationTitle(L10n.t("Settings", language: appLanguage))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 if showsCloseButton {
                     ToolbarItem(placement: .topBarLeading) {

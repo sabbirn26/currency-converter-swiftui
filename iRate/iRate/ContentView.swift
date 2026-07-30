@@ -8,70 +8,45 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel = CurrencyViewModel()
     @State private var selectedTab: AppTab = .convert
-    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            ConverterView(
-                viewModel: viewModel,
-                onOpenSettings: {
-                    selectTab(.settings)
-                }
-            )
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.convert)
-            .tabItem {
-                Label(
-                    L10n.t("Convert", language: appLanguage),
-                    systemImage: "arrow.left.arrow.right"
-                )
-            }
+        ZStack {
+            AppBackgroundView()
 
-            RatesView(
-                viewModel: viewModel,
-                onSelectCurrency: { code in
-                    viewModel.selectDestination(code)
-                    selectTab(.convert)
-                }
-            )
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.rates)
-            .tabItem {
-                Label(
-                    L10n.t("Rates", language: appLanguage),
-                    systemImage: "list.bullet"
-                )
-            }
-
-            FavoritesView(
-                viewModel: viewModel,
-                onSelectCurrency: { code in
-                    viewModel.selectDestination(code)
-                    selectTab(.convert)
-                }
-            )
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.favorites)
-            .tabItem {
-                Label(
-                    L10n.t("Favorites", language: appLanguage),
-                    systemImage: "star"
-                )
-            }
-
-            SettingsView(showsCloseButton: false)
-                .toolbar(.hidden, for: .tabBar)
-                .tag(AppTab.settings)
-                .tabItem {
-                    Label(
-                        L10n.t("Settings", language: appLanguage),
-                        systemImage: "gearshape"
+            VStack(spacing: 0) {
+                ZStack {
+                    ConverterView(
+                        viewModel: viewModel,
+                        onOpenSettings: {
+                            selectTab(.settings)
+                        }
                     )
+                    .appTabContent(isSelected: selectedTab == .convert)
+
+                    RatesView(
+                        viewModel: viewModel,
+                        onSelectCurrency: { code in
+                            viewModel.selectDestination(code)
+                            selectTab(.convert)
+                        }
+                    )
+                    .appTabContent(isSelected: selectedTab == .rates)
+
+                    FavoritesView(
+                        viewModel: viewModel,
+                        onSelectCurrency: { code in
+                            viewModel.selectDestination(code)
+                            selectTab(.convert)
+                        }
+                    )
+                    .appTabContent(isSelected: selectedTab == .favorites)
+
+                    SettingsView(showsCloseButton: false)
+                        .appTabContent(isSelected: selectedTab == .settings)
                 }
-        }
-        .tint(AppTheme.accentDeep)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            AppTabBar(selection: $selectedTab)
+
+                AppTabBar(selection: $selectedTab)
+            }
         }
         .onChange(of: selectedTab) { _ in
             Haptics.selection()
@@ -87,6 +62,14 @@ struct ContentView: View {
 
     private func selectTab(_ tab: AppTab) {
         selectedTab = tab
+    }
+}
+
+private extension View {
+    func appTabContent(isSelected: Bool) -> some View {
+        opacity(isSelected ? 1 : 0)
+            .allowsHitTesting(isSelected)
+            .accessibilityHidden(!isSelected)
     }
 }
 

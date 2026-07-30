@@ -24,8 +24,6 @@ struct ConverterView: View {
 
     var body: some View {
         ZStack {
-            AppBackgroundView()
-
             VStack(spacing: 12) {
                 HeaderView(onSettings: onOpenSettings)
                 converterCard

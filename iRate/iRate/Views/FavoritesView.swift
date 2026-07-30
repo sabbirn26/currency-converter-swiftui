@@ -12,8 +12,6 @@ struct FavoritesView: View {
 
     var body: some View {
         ZStack {
-            AppBackgroundView()
-
             VStack(spacing: 18) {
                 TabPageHeader(
                     title: L10n.t("Favorite currencies", language: appLanguage),
