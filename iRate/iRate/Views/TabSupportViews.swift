@@ -5,6 +5,74 @@
 
 import SwiftUI
 
+enum AppTab: CaseIterable, Hashable {
+    case convert
+    case rates
+    case favorites
+    case settings
+
+    var titleKey: String {
+        switch self {
+        case .convert: return "Convert"
+        case .rates: return "Rates"
+        case .favorites: return "Favorites"
+        case .settings: return "Settings"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .convert: return "arrow.left.arrow.right"
+        case .rates: return "list.bullet"
+        case .favorites: return "star"
+        case .settings: return "gearshape"
+        }
+    }
+}
+
+struct AppTabBar: View {
+    @Binding var selection: AppTab
+    @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
+
+    var body: some View {
+        HStack(spacing: 0) {
+            ForEach(AppTab.allCases, id: \.self) { tab in
+                Button {
+                    selection = tab
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: tab.icon)
+                            .font(.system(size: 18, weight: .semibold))
+
+                        Text(L10n.t(tab.titleKey, language: appLanguage))
+                            .font(.caption2.weight(.semibold))
+                            .lineLimit(1)
+                    }
+                    .foregroundStyle(selection == tab ? AppTheme.accentDeep : AppTheme.secondaryText)
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selection == tab ? .isSelected : [])
+            }
+        }
+        .padding(.horizontal, 8)
+        .frame(height: 64)
+        .background {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(AppTheme.elevatedBackground)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(AppTheme.border, lineWidth: 1)
+                }
+                .shadow(color: AppTheme.shadow, radius: 14, y: 6)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+        .padding(.bottom, 6)
+    }
+}
+
 struct TabPageHeader: View {
     let title: String
     let subtitle: String

@@ -18,6 +18,7 @@ struct ContentView: View {
                     selectTab(.settings)
                 }
             )
+            .toolbar(.hidden, for: .tabBar)
             .tag(AppTab.convert)
             .tabItem {
                 Label(
@@ -33,6 +34,7 @@ struct ContentView: View {
                     selectTab(.convert)
                 }
             )
+            .toolbar(.hidden, for: .tabBar)
             .tag(AppTab.rates)
             .tabItem {
                 Label(
@@ -48,6 +50,7 @@ struct ContentView: View {
                     selectTab(.convert)
                 }
             )
+            .toolbar(.hidden, for: .tabBar)
             .tag(AppTab.favorites)
             .tabItem {
                 Label(
@@ -57,6 +60,7 @@ struct ContentView: View {
             }
 
             SettingsView(showsCloseButton: false)
+                .toolbar(.hidden, for: .tabBar)
                 .tag(AppTab.settings)
                 .tabItem {
                     Label(
@@ -66,8 +70,9 @@ struct ContentView: View {
                 }
         }
         .tint(AppTheme.accentDeep)
-        .toolbarBackground(AppTheme.elevatedBackground, for: .tabBar)
-        .toolbarBackground(.visible, for: .tabBar)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            AppTabBar(selection: $selectedTab)
+        }
         .onChange(of: selectedTab) { _ in
             Haptics.selection()
         }
@@ -83,13 +88,6 @@ struct ContentView: View {
     private func selectTab(_ tab: AppTab) {
         selectedTab = tab
     }
-}
-
-private enum AppTab: Hashable {
-    case convert
-    case rates
-    case favorites
-    case settings
 }
 
 #Preview {
