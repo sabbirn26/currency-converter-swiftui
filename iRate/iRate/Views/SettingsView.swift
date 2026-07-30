@@ -25,18 +25,21 @@ struct SettingsView: View {
             ZStack {
                 AppBackgroundView()
 
-                ScrollView(showsIndicators: false) {
-                    VStack(spacing: 18) {
-                        headerCard
-                        appearanceCard
-                        preferencesCard
-                        developerCard
-                        linksCard
+                VStack(spacing: 18) {
+                    headerCard
+
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 18) {
+                            appearanceCard
+                            preferencesCard
+                            developerCard
+                            linksCard
+                        }
+                        .padding(.bottom, 32)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 12)
-                    .padding(.bottom, 32)
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
             }
             .navigationTitle(L10n.t("Settings", language: appLanguage))
             .navigationBarTitleDisplayMode(.inline)

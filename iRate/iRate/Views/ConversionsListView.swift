@@ -10,6 +10,7 @@ struct ConversionsListView: View {
     let items: [CurrencyRateRow]
     let onSelect: (String) -> Void
     let onFavorite: (String) -> Void
+    let onRefresh: () async -> Void
     @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
@@ -29,13 +30,20 @@ struct ConversionsListView: View {
                     .background(AppTheme.accent.opacity(0.12), in: Capsule())
             }
 
-            LazyVStack(spacing: 10) {
-                ForEach(items) { item in
-                    rateRow(item)
+            ScrollView(showsIndicators: false) {
+                LazyVStack(spacing: 10) {
+                    ForEach(items) { item in
+                        rateRow(item)
+                    }
                 }
             }
+            .refreshable {
+                await onRefresh()
+            }
+            .scrollDismissesKeyboard(.immediately)
         }
         .padding(16)
+        .frame(maxHeight: .infinity)
         .appCard(cornerRadius: 24)
     }
 

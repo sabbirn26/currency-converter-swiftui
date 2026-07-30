@@ -16,44 +16,44 @@ struct RatesView: View {
         ZStack {
             AppBackgroundView()
 
-            ScrollView(showsIndicators: false) {
-                LazyVStack(spacing: 18) {
-                    TabPageHeader(
-                        title: L10n.t("Exchange rates", language: appLanguage),
-                        subtitle: L10n.t("Browse and choose any currency.", language: appLanguage),
-                        icon: "chart.line.uptrend.xyaxis"
-                    )
+            VStack(spacing: 18) {
+                TabPageHeader(
+                    title: L10n.t("Exchange rates", language: appLanguage),
+                    subtitle: L10n.t("Browse and choose any currency.", language: appLanguage),
+                    icon: "chart.line.uptrend.xyaxis"
+                )
 
-                    searchField
+                searchField
 
-                    if viewModel.hasError {
-                        RateErrorCard {
-                            retry()
-                        }
+                if viewModel.hasError {
+                    RateErrorCard {
+                        retry()
                     }
+                }
 
-                    if !filteredRows.isEmpty {
-                        ConversionsListView(
-                            title: L10n.t("All currencies", language: appLanguage),
-                            items: filteredRows,
-                            onSelect: selectCurrency,
-                            onFavorite: toggleFavorite
-                        )
-                    } else if !viewModel.rates.isEmpty {
+                if !filteredRows.isEmpty {
+                    ConversionsListView(
+                        title: L10n.t("All currencies", language: appLanguage),
+                        items: filteredRows,
+                        onSelect: selectCurrency,
+                        onFavorite: toggleFavorite,
+                        onRefresh: refresh
+                    )
+                } else {
+                    if !viewModel.rates.isEmpty {
                         EmptyStateCard(
                             icon: "magnifyingglass",
                             title: L10n.t("No currencies found", language: appLanguage),
                             message: L10n.t("Try a different currency code.", language: appLanguage)
                         )
                     }
+
+                    Spacer(minLength: 0)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 32)
             }
-            .refreshable {
-                await refresh()
-            }
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 12)
 
             LoadingOverlayView(isLoading: viewModel.isInitialLoading)
         }

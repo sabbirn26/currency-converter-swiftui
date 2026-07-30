@@ -14,42 +14,40 @@ struct FavoritesView: View {
         ZStack {
             AppBackgroundView()
 
-            ScrollView(showsIndicators: false) {
-                LazyVStack(spacing: 18) {
-                    TabPageHeader(
-                        title: L10n.t("Favorite currencies", language: appLanguage),
-                        subtitle: L10n.t("Your saved currencies in one place.", language: appLanguage),
-                        icon: "star.fill"
-                    )
+            VStack(spacing: 18) {
+                TabPageHeader(
+                    title: L10n.t("Favorite currencies", language: appLanguage),
+                    subtitle: L10n.t("Your saved currencies in one place.", language: appLanguage),
+                    icon: "star.fill"
+                )
 
-                    if viewModel.hasError {
-                        RateErrorCard {
-                            retry()
-                        }
-                    }
-
-                    if viewModel.favoriteRows.isEmpty {
-                        EmptyStateCard(
-                            icon: "star",
-                            title: L10n.t("No favorites yet", language: appLanguage),
-                            message: L10n.t("Add favorites from the Rates tab.", language: appLanguage)
-                        )
-                    } else {
-                        ConversionsListView(
-                            title: L10n.t("Favorites", language: appLanguage),
-                            items: viewModel.favoriteRows,
-                            onSelect: selectCurrency,
-                            onFavorite: toggleFavorite
-                        )
+                if viewModel.hasError {
+                    RateErrorCard {
+                        retry()
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 32)
+
+                if viewModel.favoriteRows.isEmpty {
+                    EmptyStateCard(
+                        icon: "star",
+                        title: L10n.t("No favorites yet", language: appLanguage),
+                        message: L10n.t("Add favorites from the Rates tab.", language: appLanguage)
+                    )
+
+                    Spacer(minLength: 0)
+                } else {
+                    ConversionsListView(
+                        title: L10n.t("Favorites", language: appLanguage),
+                        items: viewModel.favoriteRows,
+                        onSelect: selectCurrency,
+                        onFavorite: toggleFavorite,
+                        onRefresh: refresh
+                    )
+                }
             }
-            .refreshable {
-                await refresh()
-            }
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 12)
 
             LoadingOverlayView(isLoading: viewModel.isInitialLoading)
         }

@@ -26,30 +26,24 @@ struct ConverterView: View {
         ZStack {
             AppBackgroundView()
 
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 18) {
-                    HeaderView(onSettings: onOpenSettings)
-                    converterCard
+            VStack(spacing: 18) {
+                HeaderView(onSettings: onOpenSettings)
+                converterCard
 
-                    if viewModel.hasError {
-                        RateErrorCard {
-                            retry()
-                        }
+                if viewModel.hasError {
+                    RateErrorCard {
+                        retry()
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 32)
-                .opacity(showContent ? 1 : 0)
-                .offset(y: showContent ? 0 : 10)
-                .animation(.easeOut(duration: 0.4), value: showContent)
+
+                Spacer(minLength: 0)
             }
-            .scrollDismissesKeyboard(.immediately)
-            .refreshable {
-                Haptics.lightImpact()
-                await viewModel.refresh()
-                viewModel.hasError ? Haptics.error() : Haptics.success()
-            }
+            .padding(.horizontal, 20)
+            .padding(.top, 18)
+            .padding(.bottom, 12)
+            .opacity(showContent ? 1 : 0)
+            .offset(y: showContent ? 0 : 10)
+            .animation(.easeOut(duration: 0.4), value: showContent)
 
             LoadingOverlayView(isLoading: viewModel.isInitialLoading)
         }
