@@ -13,6 +13,8 @@ struct CurrencySelectorView: View {
     let onDestinationTap: () -> Void
     let onSwap: () -> Void
     @State private var swapRotation: Double = 0
+    @State private var swapScale: CGFloat = 1
+    @State private var swapAnimationID = 0
     @AppStorage(AppStorageKeys.appLanguage) private var appLanguage = "en"
 
     var body: some View {
@@ -66,9 +68,7 @@ struct CurrencySelectorView: View {
 
     private var swapButton: some View {
         Button {
-            withAnimation(.spring(response: 0.38, dampingFraction: 0.65)) {
-                swapRotation += 180
-            }
+            animateSwapButton()
             onSwap()
         } label: {
             ZStack {
@@ -88,8 +88,31 @@ struct CurrencySelectorView: View {
                         .rotationEffect(.degrees(swapRotation))
                 }
             }
+            .scaleEffect(swapScale)
         }
         .buttonStyle(.plain)
         .accessibilityLabel(L10n.t("Swap currencies", language: appLanguage))
+    }
+
+    private func animateSwapButton() {
+        swapAnimationID += 1
+        let animationID = swapAnimationID
+
+        withAnimation(.easeOut(duration: 0.12)) {
+            swapScale = 1.15
+        }
+
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.65)) {
+            swapRotation += 180
+        }
+
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 120_000_000)
+            guard animationID == swapAnimationID else { return }
+
+            withAnimation(.spring(response: 0.38, dampingFraction: 0.65)) {
+                swapScale = 1
+            }
+        }
     }
 }
