@@ -60,32 +60,32 @@ struct SettingsView: View {
 
 private extension SettingsView {
     var headerCard: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 12) {
             Image("icon")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 74, height: 74)
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
                         .stroke(AppTheme.border, lineWidth: 1)
                 }
-                .shadow(color: AppTheme.accent.opacity(0.22), radius: 12, y: 6)
+                .shadow(color: AppTheme.accent.opacity(0.22), radius: 8, y: 4)
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("iRate")
-                    .font(.system(size: 25, weight: .bold, design: .rounded))
+                    .font(.system(size: 22, weight: .bold, design: .rounded))
                     .foregroundStyle(AppTheme.primaryText)
 
                 Text(L10n.t("Fast, focused currency conversion.", language: appLanguage))
-                    .font(.subheadline)
+                    .font(.footnote)
                     .foregroundStyle(AppTheme.secondaryText)
             }
 
             Spacer()
         }
-        .padding(18)
-        .appCard(cornerRadius: 24)
+        .padding(14)
+        .appCard(cornerRadius: 20)
     }
 
     var appearanceCard: some View {
